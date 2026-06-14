@@ -52,6 +52,26 @@ $HOME/.agents/skills/<skill-name>/SKILL.md
 
 ## 工具特定初始化
 
+也可以把下面这段提示词直接发给 AI 工具，让它自行拉取 GitHub 仓库并初始化全局提示词：
+
+```text
+请帮我安装这个 KylinOS Desktop V11 系统问题处理 skill：
+
+https://github.com/Swordup-Z/kylinos-desktop-v11-skill
+
+要求：
+1. 将仓库克隆到 $HOME/kylinos-desktop-v11-skill。
+2. 根据当前工具类型，更新用户级全局提示词文件：
+   - Codex: $HOME/.codex/AGENTS.md
+   - Claude Code: $HOME/.claude/CLAUDE.md
+   - opencode: $HOME/.config/opencode/AGENTS.md
+3. 在全局提示词中加入规则：处理 KylinOS Desktop V11、UKUI、KARE、Kaiming、Clash Verge、系统服务、开机自启动、TUN、维护模式、磐石架构、系统保护、分区、挂载、overlay、AI 子系统等桌面系统问题时，先读取 $HOME/kylinos-desktop-v11-skill/SKILL.md，再按其中“参考文档”选择性读取 references/*.md。
+4. 系统级修复前必须先运行 mm-cli -s 检查维护模式；非维护模式只允许诊断，不要实际修改 /usr、/etc、/opt、系统包、系统服务、设备节点、分区或 KSaf 策略。
+5. 问题确认修复后，如果产生新的可复用经验，应更新到该 skill 的 SKILL.md 或 references/*.md。
+6. 执行任何 git commit 时，提交作者、提交正文和提交 trailer 不得包含 AI 相关署名或协作生成信息。
+7. 安装完成后验证：读取 $HOME/kylinos-desktop-v11-skill/SKILL.md，并告诉我后续处理 KylinOS Desktop V11 系统问题时会先使用哪个 skill 入口。
+```
+
 Codex：
 
 ```bash

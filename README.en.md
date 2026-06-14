@@ -8,6 +8,28 @@ A reusable skill and knowledge base for diagnosing, fixing, verifying, and recor
 
 This repository is not a directly executable program. It is a reusable system troubleshooting skill for AI coding tools. The recommended workflow is: clone it under your home directory, then configure your AI tool's user-level global prompt to read `SKILL.md` whenever you are working on KylinOS Desktop V11 system issues.
 
+### Ask An AI Tool To Install It
+
+You can also paste the following prompt into Codex, Claude Code, opencode, or another AI coding tool and let it install the skill for you:
+
+```text
+Please install this KylinOS Desktop V11 system troubleshooting skill:
+
+https://github.com/Swordup-Z/kylinos-desktop-v11-skill
+
+Requirements:
+1. Clone the repository to $HOME/kylinos-desktop-v11-skill.
+2. Depending on the current tool, update the user-level global prompt file:
+   - Codex: $HOME/.codex/AGENTS.md
+   - Claude Code: $HOME/.claude/CLAUDE.md
+   - opencode: $HOME/.config/opencode/AGENTS.md
+3. Add a global rule: when handling KylinOS Desktop V11, UKUI, KARE, Kaiming, Clash Verge, system services, autostart, TUN, maintenance mode, PanShi architecture, system protection, partitions, mounts, overlay, or AI subsystem issues, first read $HOME/kylinos-desktop-v11-skill/SKILL.md, then selectively read the relevant references/*.md files listed there.
+4. Before any system-level repair, run mm-cli -s to check maintenance mode. If not in maintenance mode, only perform diagnostics and do not modify /usr, /etc, /opt, system packages, services, device nodes, partitions, or KSaf policy.
+5. After a fix is confirmed, record reusable findings in this skill's SKILL.md or references/*.md.
+6. When running any git commit, do not include AI-related author, co-author, generator, or assistant attribution in the commit author, commit body, or commit trailers.
+7. After installation, verify by reading $HOME/kylinos-desktop-v11-skill/SKILL.md and tell me which skill entry point you will use first for future KylinOS Desktop V11 system issues.
+```
+
 ### 1. Clone To Your Home Directory
 
 ```bash
