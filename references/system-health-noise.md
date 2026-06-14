@@ -5,6 +5,7 @@
 ## 目录
 
 - [`motd-news.service`](#motd-newsservice)
+- [`kylin-source-update-T*.timer` 残留坏链接](#kylin-source-update-ttimer-残留坏链接)
 - [PAM 引用缺失的 `pam_gnome_keyring.so`](#pam-引用缺失的-pam_gnome_keyringso)
 - [rsyslog 旧式 imjournal 指令](#rsyslog-旧式-imjournal-指令)
 
@@ -20,6 +21,39 @@ systemctl --failed --no-pager
 ```
 
 不要直接删除 `/usr/lib/systemd/system/*.service`；这些文件属于软件包管理范围。
+
+## `kylin-source-update-T*.timer` 残留坏链接
+
+系统更新或 `kylin-system-updater` 升级后，可能出现旧的分片 timer 残留为 `not-found failed`：
+
+```text
+kylin-source-update-T1.timer not-found failed
+kylin-source-update-T2.timer not-found failed
+kylin-source-update-T3.timer not-found failed
+kylin-source-update-T4.timer not-found failed
+```
+
+先确认新 timer 是否存在并启用：
+
+```bash
+systemctl status kylin-source-update-timer.timer kylin-source-update-timer.service --no-pager
+find /etc/systemd/system/timers.target.wants -maxdepth 1 -name 'kylin-source-update-T*.timer' -ls
+ls -l /etc/systemd/system/multi-user.target.wants/kylin-source-update-timer.timer
+```
+
+如果 `kylin-source-update-T*.timer` 只是 `/etc/systemd/system/timers.target.wants/` 下指向不存在单元的坏链接，而新的 `kylin-source-update-timer.timer` 已正常存在，可以清理残留链接并重载：
+
+```bash
+sudo rm -f /etc/systemd/system/timers.target.wants/kylin-source-update-T1.timer \
+  /etc/systemd/system/timers.target.wants/kylin-source-update-T2.timer \
+  /etc/systemd/system/timers.target.wants/kylin-source-update-T3.timer \
+  /etc/systemd/system/timers.target.wants/kylin-source-update-T4.timer
+sudo systemctl daemon-reload
+sudo systemctl reset-failed
+systemctl --failed --no-pager
+```
+
+不要删除 `/usr/lib/systemd/system/kylin-source-update-timer.*`；这些是当前版本使用的新单元。
 
 ## PAM 引用缺失的 `pam_gnome_keyring.so`
 
