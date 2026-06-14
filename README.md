@@ -4,11 +4,11 @@
 
 用于沉淀和复用 KylinOS Desktop V11 桌面系统问题的诊断、修复与验证经验，覆盖 UKUI、KARE/Kaiming、TUN、开机自启动、维护模式、磐石架构、系统服务、分区挂载和 overlay 等场景。
 
-## 使用方式
+## 安装方式
 
 这个仓库不是一个直接运行的程序，而是一组给 AI 编程工具读取的“系统问题处理经验”。推荐用法是：把仓库放到用户目录，然后在 Codex、Claude Code、opencode 等工具的全局提示词里告诉它们遇到 KylinOS Desktop V11 系统问题时先读取这里的 `SKILL.md`。
 
-### 让 AI 工具自动安装
+### 方式一：让 AI 工具自动安装
 
 你也可以直接把下面这段话发给 Codex、Claude Code、opencode 等工具，让它自己拉取仓库并完成配置：
 
@@ -30,7 +30,9 @@ https://github.com/Swordup-Z/kylinos-desktop-v11-skill
 7. 安装完成后验证：读取 $HOME/kylinos-desktop-v11-skill/SKILL.md，并告诉我后续处理 KylinOS Desktop V11 系统问题时会先使用哪个 skill 入口。
 ```
 
-### 1. 克隆到用户目录
+### 方式二：手动安装
+
+#### 1. 克隆到用户目录
 
 ```bash
 cd "$HOME"
@@ -43,7 +45,7 @@ git clone https://github.com/Swordup-Z/kylinos-desktop-v11-skill.git
 $HOME/kylinos-desktop-v11-skill/SKILL.md
 ```
 
-### 2. 配置 AI 工具的全局提示词
+#### 2. 配置 AI 工具的全局提示词
 
 把下面这段加入你使用的工具的用户级全局提示词文件：
 
@@ -69,7 +71,7 @@ opencode:    $HOME/.config/opencode/AGENTS.md
 references/agent-global-prompts.md
 ```
 
-### 3. 验证配置是否生效
+#### 3. 验证配置是否生效
 
 在你的 AI 工具里问：
 
@@ -83,7 +85,7 @@ references/agent-global-prompts.md
 $HOME/kylinos-desktop-v11-skill/SKILL.md
 ```
 
-### 4. 实际使用
+#### 4. 实际使用
 
 以后直接描述系统问题即可，例如：
 

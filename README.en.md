@@ -4,11 +4,11 @@
 
 A reusable skill and knowledge base for diagnosing, fixing, verifying, and recording KylinOS Desktop V11 system issues. It covers UKUI, KARE/Kaiming, TUN, autostart, maintenance mode, system services, partitions, mounts, overlay views, and the PanShi system architecture.
 
-## Usage
+## Installation
 
 This repository is not a directly executable program. It is a reusable system troubleshooting skill for AI coding tools. The recommended workflow is: clone it under your home directory, then configure your AI tool's user-level global prompt to read `SKILL.md` whenever you are working on KylinOS Desktop V11 system issues.
 
-### Ask An AI Tool To Install It
+### Option 1: Ask An AI Tool To Install It
 
 You can also paste the following prompt into Codex, Claude Code, opencode, or another AI coding tool and let it install the skill for you:
 
@@ -30,7 +30,9 @@ Requirements:
 7. After installation, verify by reading $HOME/kylinos-desktop-v11-skill/SKILL.md and tell me which skill entry point you will use first for future KylinOS Desktop V11 system issues.
 ```
 
-### 1. Clone To Your Home Directory
+### Option 2: Manual Installation
+
+#### 1. Clone To Your Home Directory
 
 ```bash
 cd "$HOME"
@@ -43,7 +45,7 @@ After cloning, the entry point should be:
 $HOME/kylinos-desktop-v11-skill/SKILL.md
 ```
 
-### 2. Configure Your AI Tool's Global Prompt
+#### 2. Configure Your AI Tool's Global Prompt
 
 Add the following instruction to your tool's user-level global prompt file:
 
@@ -69,7 +71,7 @@ For a fuller multi-tool template, see:
 references/agent-global-prompts.md
 ```
 
-### 3. Verify The Setup
+#### 3. Verify The Setup
 
 Ask your AI tool:
 
@@ -83,7 +85,7 @@ The expected answer should point to:
 $HOME/kylinos-desktop-v11-skill/SKILL.md
 ```
 
-### 4. Use It
+#### 4. Use It
 
 After setup, describe the system issue directly, for example:
 
