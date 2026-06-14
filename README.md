@@ -2,7 +2,7 @@
 
 [English](README.en.md)
 
-用于沉淀和复用 KylinOS Desktop V11 桌面系统问题的诊断、修复与验证经验，覆盖 UKUI、KARE/Kaiming、TUN、开机自启动、维护模式、磐石架构、系统服务、分区挂载和 overlay 等场景。
+用于沉淀和复用 KylinOS Desktop V11 桌面系统问题的诊断、修复与验证经验，覆盖 UKUI、KARE/Kaiming、Clash Verge TUN、开机自启动、维护模式、磐石架构、系统服务、图形/频率、托盘、AI 子系统、分区挂载、overlay、系统噪声清理和 AI 工具全局提示词等场景。
 
 ## 安装方式
 
@@ -132,14 +132,42 @@ AI 工具应先读取 `SKILL.md`，再按需读取相关 `references/*.md`，然
 
 ## 能处理的问题
 
-- 通用系统维护、维护模式、系统级修复边界、未覆盖问题的最小闭环：[`references/system-maintenance.md`](references/system-maintenance.md)
-- UKUI 右侧托盘小图标、StatusNotifier 图标顺序/隐藏区重启后不保留、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
-- 图形驱动、GPU/显示频率、`devfreq` 调频失败、`failed to set <driver> frequency`、无 NVIDIA 硬件但 NVIDIA 驱动反复探测等硬件强相关图形稳定性问题：[`references/graphics-frequency.md`](references/graphics-frequency.md)
-- `ukui-system-service-manager.service` 反复 timeout、`QDBusError("", "")`、`org.ukui.serviceManager` 被孤儿进程占用、UKUI 系统服务管理器异常：[`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
-- Clash Verge Rev TUN 模式、`clash-verge-service`、`/dev/net/tun`、`verge-mihomo` 路径或核心丢失问题：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
-- UKUI 开机自启动不生效、设置界面不显示新增启动项、`sort-app-list` / `statusMap` 异常：[`references/ukui-autostart.md`](references/ukui-autostart.md)
-- 任务栏/托盘 AI 助手、AI 子系统、Kaiming AI 助手、`kylin-ai-memorymap` 文件保护箱残留清理：[`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
-- 根分区、DATA 分区、`/home` 挂载、磐石架构/ostree/overlay/KARE 合并视图、空间占用判断：[`references/storage-layout.md`](references/storage-layout.md)
+当前 skill 已沉淀过以下问题类型。每个条目都链接到对应 reference，AI 工具应按需读取，不要一次性加载全部文档。
+
+### 系统维护与安全边界
+
+- 维护模式检查、进入/退出维护模式、`mm-cli -s` / `mm-cli -o` / `mm-cli -c -a` 使用边界：[`references/system-maintenance.md`](references/system-maintenance.md)
+- 磐石架构下命令行安装、写 `/usr`、`/etc`、`/opt`、systemd、设备节点前的安全流程：[`references/system-maintenance.md`](references/system-maintenance.md)
+- 全盘体检后的系统噪声清理，包括 `motd-news.service`、缺失 `pam_gnome_keyring.so`、rsyslog 旧式 `$IMJournalStateFile` 指令：[`references/system-maintenance.md`](references/system-maintenance.md)
+- 未覆盖的新系统问题如何按“诊断 -> 修复 -> 验证 -> 经验沉淀”闭环处理：[`references/system-maintenance.md`](references/system-maintenance.md)
+
+### 网络代理与 Clash Verge
+
+- Clash Verge Rev TUN 模式安装失败、`/dev/net/tun` 缺失、TUN 设备持久化：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+- `clash-verge-service` 安装、启动、状态验证和权限问题：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+- `verge-mihomo` 路径不一致、核心丢失、KARE shadow/upper 路径恢复，以及代理组消失后的排查：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+
+### UKUI 桌面与系统服务
+
+- UKUI 开机自启动不生效、设置界面不显示新增启动项、原始 `.desktop` 修复、图标解析、`sort-app-list` / `statusMap` 异常：[`references/ukui-autostart.md`](references/ukui-autostart.md)
+- UKUI 右侧托盘小图标顺序和隐藏区不持久、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
+- `ukui-system-service-manager.service` 反复 timeout、`QDBusError("", "")`、`org.ukui.serviceManager` 被孤儿进程占用、D-Bus activation 持久化修复：[`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
+- 任务栏/托盘 AI 助手、AI 子系统、Kaiming AI 助手卸载边界和残留清理：[`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
+
+### 图形、频率与硬件相关稳定性
+
+- 图形驱动、GPU/显示频率、`devfreq` 调频失败、`failed to set <driver> frequency`：[`references/graphics-frequency.md`](references/graphics-frequency.md)
+- Phytium FTG / `PHYT0048:00` 等硬件强相关图形稳定性问题的诊断和 UKUI 电源管理策略处理：[`references/graphics-frequency.md`](references/graphics-frequency.md)
+- 无 NVIDIA 硬件但系统反复探测 NVIDIA、`NVRM: No NVIDIA GPU found`、NVIDIA suspend/resume hook 处理边界：[`references/graphics-frequency.md`](references/graphics-frequency.md)
+
+### 存储、分区与 overlay
+
+- 根分区、DATA 分区、`/home` 实际挂载位置、空间占用判断：[`references/storage-layout.md`](references/storage-layout.md)
+- 磐石架构、ostree、overlay、KARE 合并视图的判断方式：[`references/storage-layout.md`](references/storage-layout.md)
+- 根分区扩容或 DATA 分区调整前的诊断边界和风险判断：[`references/storage-layout.md`](references/storage-layout.md)
+
+### AI 工具配置与经验复用
+
 - Codex 用户级配置、默认 full access、权限显示、维护模式/root 权限边界：[`references/codex-config.md`](references/codex-config.md)
 - Codex、Claude Code、opencode 等多工具全局提示词入口、自动安装提示词、渐进式披露加载模板：[`references/agent-global-prompts.md`](references/agent-global-prompts.md)
 

@@ -2,7 +2,7 @@
 
 [中文](README.md)
 
-A reusable skill and knowledge base for diagnosing, fixing, verifying, and recording KylinOS Desktop V11 system issues. It covers UKUI, KARE/Kaiming, TUN, autostart, maintenance mode, system services, partitions, mounts, overlay views, and the PanShi system architecture.
+A reusable skill and knowledge base for diagnosing, fixing, verifying, and recording KylinOS Desktop V11 system issues. It covers UKUI, KARE/Kaiming, Clash Verge TUN, autostart, maintenance mode, system services, graphics/frequency issues, tray behavior, AI subsystem cleanup, partitions, mounts, overlay views, system-noise cleanup, global prompts for AI tools, and the PanShi system architecture.
 
 ## Installation
 
@@ -132,14 +132,42 @@ When using this skill for system troubleshooting, the AI tool must follow these 
 
 ## Supported Issues
 
-- General system maintenance, maintenance mode, system-level repair boundaries, and the minimal loop for uncovered issues: [`references/system-maintenance.md`](references/system-maintenance.md)
-- UKUI right-side system tray icons, StatusNotifier icon order or folded/hidden area not persisting after app or system restart, `systemTray.json`, `orderedItems`, and `separateIndex`: [`references/ukui-system-tray.md`](references/ukui-system-tray.md)
-- Graphics drivers, GPU/display frequency, `devfreq` DVFS failures, `failed to set <driver> frequency`, and hardware-specific graphics stability issues such as NVIDIA probing on systems without NVIDIA hardware: [`references/graphics-frequency.md`](references/graphics-frequency.md)
-- `ukui-system-service-manager.service` repeated timeouts, `QDBusError("", "")`, `org.ukui.serviceManager` owned by an orphan process, and UKUI system service manager failures: [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
-- Clash Verge Rev TUN mode, `clash-verge-service`, `/dev/net/tun`, and missing or misplaced `verge-mihomo`: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
-- UKUI autostart failures, missing entries in Settings, `sort-app-list` / `statusMap` issues: [`references/ukui-autostart.md`](references/ukui-autostart.md)
-- Taskbar/tray AI assistant, AI subsystem cleanup, Kaiming AI assistant, and `kylin-ai-memorymap` box residue: [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
-- Root partition, DATA partition, `/home` mounts, PanShi/ostree/overlay/KARE merged views, and disk usage interpretation: [`references/storage-layout.md`](references/storage-layout.md)
+The skill currently covers the issue types below. Each item links to its reference file; AI tools should load only the relevant references instead of preloading the whole repository.
+
+### System Maintenance And Safety Boundaries
+
+- Maintenance-mode checks, entering/exiting maintenance mode, and `mm-cli -s` / `mm-cli -o` / `mm-cli -c -a` boundaries: [`references/system-maintenance.md`](references/system-maintenance.md)
+- Safe flow before command-line installs or writes to `/usr`, `/etc`, `/opt`, systemd units, device nodes, or system packages under the PanShi architecture: [`references/system-maintenance.md`](references/system-maintenance.md)
+- System-noise cleanup after full health checks, including `motd-news.service`, missing `pam_gnome_keyring.so`, and legacy rsyslog `$IMJournalStateFile` directives: [`references/system-maintenance.md`](references/system-maintenance.md)
+- The minimal loop for uncovered issues: diagnosis -> repair -> verification -> reusable finding capture: [`references/system-maintenance.md`](references/system-maintenance.md)
+
+### Network Proxy And Clash Verge
+
+- Clash Verge Rev TUN installation failures, missing `/dev/net/tun`, and persistent TUN device handling: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+- `clash-verge-service` installation, startup, status validation, and permission issues: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+- Missing or misplaced `verge-mihomo`, KARE shadow/upper path recovery, and proxy group disappearance after core-path problems: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+
+### UKUI Desktop And System Services
+
+- UKUI autostart failures, missing Settings entries, original `.desktop` repair, icon resolution, and `sort-app-list` / `statusMap` issues: [`references/ukui-autostart.md`](references/ukui-autostart.md)
+- UKUI right-side system tray icon order and folded/hidden area persistence, `systemTray.json`, `orderedItems`, and `separateIndex`: [`references/ukui-system-tray.md`](references/ukui-system-tray.md)
+- `ukui-system-service-manager.service` repeated timeouts, `QDBusError("", "")`, `org.ukui.serviceManager` owned by an orphan process, and persistent D-Bus activation repair: [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
+- Taskbar/tray AI assistant, AI subsystem cleanup, Kaiming AI assistant removal boundaries, and residue cleanup: [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
+
+### Graphics, Frequency, And Hardware-Specific Stability
+
+- Graphics drivers, GPU/display frequency, `devfreq` DVFS failures, and `failed to set <driver> frequency`: [`references/graphics-frequency.md`](references/graphics-frequency.md)
+- Hardware-specific graphics stability diagnosis, such as Phytium FTG / `PHYT0048:00`, and UKUI power-management policy handling: [`references/graphics-frequency.md`](references/graphics-frequency.md)
+- NVIDIA probing on systems without NVIDIA hardware, `NVRM: No NVIDIA GPU found`, and NVIDIA suspend/resume hook boundaries: [`references/graphics-frequency.md`](references/graphics-frequency.md)
+
+### Storage, Partitions, And Overlay Views
+
+- Root partition, DATA partition, actual `/home` mount location, and disk-usage interpretation: [`references/storage-layout.md`](references/storage-layout.md)
+- PanShi, ostree, overlay, and KARE merged-view interpretation: [`references/storage-layout.md`](references/storage-layout.md)
+- Diagnosis boundaries and risk checks before root expansion or DATA partition changes: [`references/storage-layout.md`](references/storage-layout.md)
+
+### AI Tool Configuration And Reuse
+
 - Codex user-level config, default full access, permission display, and maintenance-mode/root permission boundaries: [`references/codex-config.md`](references/codex-config.md)
 - Multi-tool global prompt entry points for Codex, Claude Code, opencode, AI-install prompt, and progressive loading template: [`references/agent-global-prompts.md`](references/agent-global-prompts.md)
 
