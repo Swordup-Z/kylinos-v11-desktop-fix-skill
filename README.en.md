@@ -167,6 +167,7 @@ The skill currently covers the issue types below. Each item links to its referen
 ### UKUI Desktop And System Services
 
 - UKUI autostart failures, missing Settings entries, original `.desktop` repair, icon resolution, and `sort-app-list` / `statusMap` issues: [`references/ukui-autostart.md`](references/ukui-autostart.md)
+- UKUI global shortcut conflicts, Settings reporting that a shortcut is occupied by the system, global search shortcuts, and `Alt+Space` conflicts with the window menu: [`references/ukui-keybindings.md`](references/ukui-keybindings.md)
 - UKUI right-side system tray icon order and folded/hidden area persistence, `systemTray.json`, `orderedItems`, and `separateIndex`: [`references/ukui-system-tray.md`](references/ukui-system-tray.md)
 - `ukui-system-service-manager.service` repeated timeouts, `QDBusError("", "")`, `org.ukui.serviceManager` owned by an orphan process, and persistent D-Bus activation repair: [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
 - Taskbar/tray AI assistant, AI subsystem cleanup, Kaiming AI assistant removal boundaries, and residue cleanup: [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)

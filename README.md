@@ -167,6 +167,7 @@ AI 工具应先读取 `SKILL.md`，再按需读取相关 `references/*.md`，然
 ### UKUI 桌面与系统服务
 
 - UKUI 开机自启动不生效、设置界面不显示新增启动项、原始 `.desktop` 修复、图标解析、`sort-app-list` / `statusMap` 异常：[`references/ukui-autostart.md`](references/ukui-autostart.md)
+- UKUI 全局快捷键冲突、设置界面提示快捷键被系统占用、全局搜索快捷键、`Alt+Space` 与窗口菜单冲突：[`references/ukui-keybindings.md`](references/ukui-keybindings.md)
 - UKUI 右侧托盘小图标顺序和隐藏区不持久、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
 - `ukui-system-service-manager.service` 反复 timeout、`QDBusError("", "")`、`org.ukui.serviceManager` 被孤儿进程占用、D-Bus activation 持久化修复：[`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
 - 任务栏/托盘 AI 助手、AI 子系统、Kaiming AI 助手卸载边界和残留清理：[`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
