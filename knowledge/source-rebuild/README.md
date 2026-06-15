@@ -101,7 +101,8 @@ mm-cli -c -a
 
 - 目标问题和预期行为。
 - 源码来源、候选 git 节点、当前工作分支。
-- 是否是本机客制化工作树；如果用户没有要求，不需要提交本地源码 git commit。
+- 是否是本机客制化工作树；如果需要保留变更边界，可以在本地源码工作树提交 git commit，但不要 push 到上游或公开远端。
+- 本地客制化 commit hash、导出的 patch 路径，以及后续系统包版本更新时的重新套用方式。
 - 修改过的源码文件和安装目标系统文件。
 - 构建命令、构建目录、构建依赖和已知构建注意事项。
 - 安装前 ABI/依赖/RPATH/导出符号验证结果。
@@ -113,6 +114,15 @@ mm-cli -c -a
 ```text
 /data/usershare/kylinos-local-sources/<component-or-fix>/rollback/<timestamp>/restore.sh
 ```
+
+如果用户希望后续在新版系统包上继续保留本地个性化功能，源码修改完成后应导出 patch 并记录到工作区。patch 目录应位于保存本地修改源码的项目根目录下，与 `<source-tree>/`、`build/`、`rollback/` 同级，不要放进源码树内部：
+
+```bash
+mkdir -p "/data/usershare/kylinos-local-sources/<component-or-fix>/patches"
+git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" format-patch -1 HEAD --stdout > "/data/usershare/kylinos-local-sources/<component-or-fix>/patches/<timestamp>-<short-topic>.patch"
+```
+
+该 commit 和 patch 只作为本地继续定制的依据；不要 push 到上游或公开远端。系统包升级后，应先判断新版本是否已经包含同类功能，再把 patch 套到新的源码节点上重新构建、重新做 ABI/RPATH/导出符号验证和回滚包准备。
 
 如果某个本地客制化修改已经被正式安装并持续使用，应把对应回滚包长期保存。可以保留在该问题目录的 `rollback/<timestamp>/` 下，也可以按组件迁移到：
 

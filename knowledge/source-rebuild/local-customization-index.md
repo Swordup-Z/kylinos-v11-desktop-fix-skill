@@ -46,7 +46,8 @@ ukui-panel-tray-persistence
 - 目标问题、期望行为和是否已经在系统中试装。
 - 涉及的二进制包、源码包、关键系统文件和用户级配置文件。
 - 源码来源、候选 git 节点、当前工作分支、精确匹配或近似匹配依据。
-- 是否为本机客制化工作树；如果用户没有要求，不需要提交本地源码 git commit。
+- 是否为本机客制化工作树；如果用户要求保留变更边界，可以在本地源码工作树提交 git commit，但不要 push 到上游或公开仓库。
+- 本地客制化 commit 的 hash、导出的 patch 路径，以及后续系统包版本更新时的重新套用方式。
 - 修改过的源码文件、新增资源文件、安装到系统的目标文件。
 - 构建命令、构建目录、构建依赖和构建失败后的处理记录。
 - 安装前 ABI、SONAME、NEEDED、RPATH/RUNPATH、导出符号、关键字符串验证结果。
@@ -67,10 +68,50 @@ ukui-panel-tray-persistence
 │       ├── user-backup/
 │       ├── SHA256SUMS
 │       └── restore.sh
+├── patches/
+│   └── <timestamp>-<short-topic>.patch
 └── notes/
 ```
 
 `restore.sh` 必须和对应回滚包放在同一目录。重新生成 staged 文件、调整回滚脚本或补充备份后，必须重新生成并验证 `SHA256SUMS`。
+
+## 本地 commit 与 patch 保留
+
+本地源码客制化可以使用 git commit 固化修改边界，便于以后系统包升级后继续合并个性化功能；但该 commit 默认只属于当前机器的本地工作树，不应 push 到上游社区、发行版仓库或公开远端，除非用户明确要求发布。
+
+`patches/` 是保存本地修改源码的项目根目录下的目录，应与 `<source-tree>/`、`build/`、`rollback/` 同级，不要放进源码树内部。例如源码树是：
+
+```text
+/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>/
+```
+
+则 patch 保存目录应是：
+
+```text
+/data/usershare/kylinos-local-sources/<component-or-fix>/patches/
+```
+
+推荐流程：
+
+```bash
+git status -sb
+git diff --stat
+git add <changed-files>
+git commit -m "<component>: <customization-summary>"
+mkdir -p "/data/usershare/kylinos-local-sources/<component-or-fix>/patches"
+git format-patch -1 HEAD --stdout > "/data/usershare/kylinos-local-sources/<component-or-fix>/patches/<timestamp>-<short-topic>.patch"
+```
+
+提交信息只描述实际功能变更，不写 AI 相关署名、协作生成信息或无关聊天上下文。导出的 patch 应保存在当前客制化项目根目录下的 `patches/`，不要放在源码树内部、`$HOME`、下载目录或临时目录。
+
+生成 patch 后必须更新 `CUSTOMIZATION.md`：
+
+- 记录本地 commit hash 和 patch 文件路径。
+- 记录该 patch 基于哪个源码节点、系统包版本或候选 tag 生成。
+- 记录 patch 是否已经安装到当前系统、对应回滚包路径和验证结果。
+- 记录后续版本更新时的建议合并方式，例如先切到新源码节点，再尝试 `git am <patch>`；若冲突较多，则用 `git apply --reject <patch>` 辅助人工合并，最后重新构建、做 ABI/RPATH/符号验证和试装验证。
+
+系统包或上游源码更新后，不要直接复用旧构建产物。应重新拉取或切换到新源码节点，先确认新版本是否已经包含同类功能；如果没有，再用保存的 patch 重新套用或按 patch 内容手工迁移，并重复完整的构建、安装前验证、回滚包生成和安装后验证流程。
 
 ## 全局索引
 
