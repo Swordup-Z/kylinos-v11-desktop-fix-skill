@@ -9,12 +9,12 @@
 - 系统设置界面或后端逻辑写死，配置级方案无法满足需求。
 - 需要替换系统共享库、控制中心插件或系统服务。
 - 需要评估源码版本、候选 git 节点、ABI/SONAME/依赖/RPATH 风险。
-- 需要保存本地客制化源码、构建目录、回滚包和后续继续修改所需索引。
+- 需要保存本地客制化源码、patch、构建/回滚临时目录和后续继续修改所需索引。
 
 ## 先读知识章节
 
 - 源码重编译通用流程：[`../knowledge/source-rebuild/README.md`](../knowledge/source-rebuild/README.md)
-- 本地源码客制化索引、`CUSTOMIZATION.md`、DATA 分区工作区和回滚包长期保存规则：[`../knowledge/source-rebuild/local-customization-index.md`](../knowledge/source-rebuild/local-customization-index.md)
+- 本地源码客制化索引、`CUSTOMIZATION.md`、DATA 分区工作区、patch 保存和构建/回滚清理规则：[`../knowledge/source-rebuild/local-customization-index.md`](../knowledge/source-rebuild/local-customization-index.md)
 - UKUI 全局搜索搜索引擎修改：[`../knowledge/source-rebuild/ukui-search-web-engine.md`](../knowledge/source-rebuild/ukui-search-web-engine.md)
 - UKUI 全局搜索自定义命令 provider：[`../knowledge/source-rebuild/ukui-search-command-provider.md`](../knowledge/source-rebuild/ukui-search-command-provider.md)
 - UKUI 系统托盘隐藏区稳定性源码级修改：[`../knowledge/source-rebuild/ukui-system-tray.md`](../knowledge/source-rebuild/ukui-system-tray.md)

@@ -196,8 +196,9 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 - `references/` 作为场景分类和路由入口，`knowledge/` 作为具体问题处理章节；reference 指向 knowledge 时才继续读取对应章节。
 - 如果没有命中专门 reference，至少读取通用系统维护文档 [`references/system-maintenance.md`](references/system-maintenance.md)。
 - 如果本地 skill 已读取但没有覆盖当前系统问题，在自行探索修复前，可以先尽力同步本仓库的 GitHub 上游，查看是否已有新增经验；同步前必须确认工作树干净，只允许 `fetch` 和 `pull --ff-only`，不得强制覆盖本地改动。同步失败不阻塞问题处理，继续用当前资料、模型能力和通用经验诊断。
-- 如果问题需要重新编译系统源码包、替换系统共享库、评估 ABI/SONAME/依赖/RPATH 风险，或保存本地客制化源码、构建目录和回滚包索引，先读取源码重编译分类入口 [`references/source-rebuild.md`](references/source-rebuild.md)，再按它指向的 `knowledge/source-rebuild/` 章节继续处理；本地客制化项目必须在 `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md` 记录索引。
-- 本地源码客制化修改可以在本地工作树提交 git commit 作为变更边界，但默认不要 push；应把 commit 导出为 patch，保存在保存本地修改源码的项目根目录下的 `/data/usershare/kylinos-local-sources/<component-or-fix>/patches/<source-package>/`，与 `<source-tree>/`、`build/`、`rollback/` 同级，并按源码包名分层，方便后续系统包升级后查找、重新套用或迁移个性化功能；同时维护 `/data/usershare/kylinos-local-sources/README.md` 的项目级映射和 `CUSTOMIZATION.md` 的源码包、patch、安装文件、回滚包映射。
+- 如果问题需要重新编译系统源码包、替换系统共享库、评估 ABI/SONAME/依赖/RPATH 风险，或保存本地客制化源码、patch、构建/回滚临时目录索引，先读取源码重编译分类入口 [`references/source-rebuild.md`](references/source-rebuild.md)，再按它指向的 `knowledge/source-rebuild/` 章节继续处理；本地客制化项目必须在 `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md` 记录索引。
+- 本地源码客制化修改可以在本地工作树提交 git commit 作为变更边界，但默认不要 push；应把 commit 导出为 patch，保存在保存本地修改源码的项目根目录下的 `/data/usershare/kylinos-local-sources/<component-or-fix>/patches/<source-package>/`，与 `<source-tree>/`、`build/`、可选 `rollback/` 同级，并按源码包名分层，方便后续系统包升级后查找、重新套用或迁移个性化功能；同时维护 `/data/usershare/kylinos-local-sources/README.md` 的项目级映射和 `CUSTOMIZATION.md` 的源码包、patch、安装文件、回滚方式映射。
+- 回滚包是试装阶段的安全网，不是必须长期保留的源码资产。验证通过、源码 commit/patch 已保存且用户希望保持工作区轻量时，可以清理 `build/`、`rollback/`、staging、符号对比文件等中间产物；清理后必须更新 `CUSTOMIZATION.md`，说明回滚改为通过包管理器恢复官方包，或重新套用 patch 后构建安装。
 - 本地客制化源码仓库后续需要更新时，默认在已有仓库中 `fetch`、切换分支或新建分支后迁移 patch，不删除目录、不重新完整下载；只有仓库损坏、远端来源错误、历史缺失无法更新，或用户明确要求时，才创建备用目录重新 clone。
 - 源码重编译类修复必须区分阶段：构建通过和 ABI/RPATH/符号检查通过只代表 `build-verified` 或 `staged-for-install`，不能写成已修复；只有安装到真实系统并完成桌面/服务/重启等运行时验证后，才能标记为 `runtime-verified`。
 - 普通代码开发、文档编辑、Git 操作或其他无关任务不要加载该 skill。

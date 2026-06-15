@@ -47,7 +47,7 @@ git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" 
 
 - 如果有未提交改动，先判断是否属于当前客制化修改；需要保留时先提交本地 commit 并导出 patch，再切换或合并新基线。
 - 如果已有本地客制化 commit，不要直接 reset 或覆盖；优先基于新 tag/branch 新建分支，再用 `git am <patch>`、`git cherry-pick <local-commit>` 或人工迁移方式重放修改。
-- 如果构建目录缓存过旧，可以清理或重建 `build/`，但不应删除源码仓库、`CUSTOMIZATION.md`、`patches/` 或 `rollback/`。
+- 如果构建目录缓存过旧，可以清理或重建 `build/`，但不应删除源码仓库、`CUSTOMIZATION.md` 或 `patches/`。`rollback/` 是否保留取决于当前阶段和用户策略：试装阶段应至少有可回退安全网；功能已运行时验证且 commit/patch 已保存后，用户要求保持工作区轻量时可以清理。
 - 只有源码目录损坏、远端来源错误、历史缺失导致无法 fetch，或用户明确要求重新下载时，才新建备用目录重新 clone；不要用删除旧目录再重新下载作为默认流程。
 
 每次原地更新源码基线后，都要更新 `CUSTOMIZATION.md` 中的基线版本、当前分支或 commit、patch 套用状态、构建验证结果和回滚路径。
@@ -80,8 +80,8 @@ git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" 
 /data/usershare/kylinos-local-sources/<component-or-fix>/
 ├── CUSTOMIZATION.md
 ├── <source-tree>/
-├── build/
-├── rollback/
+├── build/                 # 构建阶段产物，可按需重建
+├── rollback/              # 试装安全网，可在验证通过并保存 patch 后按用户策略清理
 │   └── <timestamp>/
 │       ├── system-backup/
 │       ├── user-backup/
@@ -143,10 +143,10 @@ git format-patch -1 HEAD --stdout > "/data/usershare/kylinos-local-sources/<comp
 
 - 记录本地 commit hash 和 patch 文件路径。
 - 记录该 patch 基于哪个源码节点、系统包版本或候选 tag 生成。
-- 记录 patch 是否已经安装到当前系统、对应回滚包路径和验证结果。
+- 记录 patch 是否已经安装到当前系统、对应回滚包路径或替代回滚方式，以及验证结果。
 - 记录后续版本更新时的建议合并方式，例如先切到新源码节点，再尝试 `git am <patch>`；若冲突较多，则用 `git apply --reject <patch>` 辅助人工合并，最后重新构建、做 ABI/RPATH/符号验证和试装验证。
 
-系统包或上游源码更新后，不要直接复用旧构建产物。应重新拉取或切换到新源码节点，先确认新版本是否已经包含同类功能；如果没有，再用保存的 patch 重新套用或按 patch 内容手工迁移，并重复完整的构建、安装前验证、回滚包生成和安装后验证流程。
+系统包或上游源码更新后，不要直接复用旧构建产物。应重新拉取或切换到新源码节点，先确认新版本是否已经包含同类功能；如果没有，再用保存的 patch 重新套用或按 patch 内容手工迁移，并重复完整的构建、安装前验证、回滚安全网准备和安装后验证流程。
 
 ## 试装与回滚策略
 
@@ -159,6 +159,12 @@ git format-patch -1 HEAD --stdout > "/data/usershare/kylinos-local-sources/<comp
 - 要进入 A/B 验证，需要在官方基线和某个已验证本地版本之间来回切换。
 
 如果需要复用既有回滚包的安装脚本进行试装，应明确区分“基线回滚包”和“试装 staging”。试装 staging 可以被覆盖或重建；基线回滚包中的 `system-backup/`、`restore.sh` 和 `SHA256SUMS` 不应被覆盖，避免失去回到改动前状态的能力。
+
+功能已经完成运行时验证后，回滚包可以按用户偏好处理：
+
+- 若用户希望保留“文件级快速回滚”，保留一个最小回滚包，只包含 `system-backup/`、`restore.sh` 和 `SHA256SUMS`，不要保留完整 build、staged 或 original-build。
+- 若用户希望保持工作区轻量，并且源码 commit 与 patch 已保存，可以删除 `rollback/`、`build/`、staging、符号对比文件和其他中间产物；`CUSTOMIZATION.md` 必须同步说明当前不保留本地回滚包，后续回滚方式是通过包管理器恢复官方包，或从 `patches/<source-package>/` 重新构建安装。
+- 回滚包目录应位于 DATA 工作区 `/data/usershare/kylinos-local-sources/<component-or-fix>/rollback/`，不要放到根分区、`/root`、`/tmp` 或用户下载目录。由于回滚包可能包含用提权命令复制的系统文件，文件所有者可能是 root；清理这类 root-owned 回滚包时可以用 `pkexec rm -rf <rollback-dir>`，但必须限定到明确的工作区回滚目录。
 
 ## 全局索引
 
@@ -179,15 +185,15 @@ git format-patch -1 HEAD --stdout > "/data/usershare/kylinos-local-sources/<comp
 为了让后续维护者或 AI 工具快速查找，不要把所有细节写进全局索引。按三层组织：
 
 1. 全局索引 `/data/usershare/kylinos-local-sources/README.md`：只记录项目级路由，包括项目目录、场景、源码包名、源码树、patch 目录、状态和 `CUSTOMIZATION.md` 链接。
-2. 项目索引 `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md`：记录该项目的源码包到二进制包、patch、安装文件和回滚包映射。
-3. patch 文件和回滚包：只在需要重新套用、构建或回滚时再读取。
+2. 项目索引 `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md`：记录该项目的源码包到二进制包、patch、安装文件和回滚方式映射。
+3. patch 文件和可选回滚包：只在需要重新套用、构建或回滚时再读取。
 
 `CUSTOMIZATION.md` 中建议增加“源码包与 patch 映射”表：
 
 ```text
 | Source package | Binary packages | Base version/tag | Source tree | Patch dir | Latest local commit | Latest patch | Stage | Evidence | Installed files | Rollback |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <source-package> | <binary-package-list> | <version-or-tag> | <source-tree>/ | patches/<source-package>/ | <commit-or-none> | <patch-or-none> | build-verified | build + ABI checks passed, not installed | /usr/lib/... | rollback/<timestamp>/restore.sh |
+| <source-package> | <binary-package-list> | <version-or-tag> | <source-tree>/ | patches/<source-package>/ | <commit-or-none> | <patch-or-none> | build-verified | build + ABI checks passed, not installed | /usr/lib/... | rollback/<timestamp>/restore.sh 或 package-manager restore |
 ```
 
 如果一个客制化项目涉及多个源码包，应在同一个项目根目录下按源码包拆分 patch 目录：
@@ -197,7 +203,7 @@ patches/<source-package-a>/
 patches/<source-package-b>/
 ```
 
-查找时先读全局索引，确认项目和源码包；再读对应项目的 `CUSTOMIZATION.md`，确认 patch、基线版本、安装目标和回滚包；最后才打开具体 patch 或源码文件。
+查找时先读全局索引，确认项目和源码包；再读对应项目的 `CUSTOMIZATION.md`，确认 patch、基线版本、安装目标和回滚方式；最后才打开具体 patch、源码文件或可选回滚包。
 
 全局索引和项目索引中的状态必须按阶段更新，不能提前确认。推荐阶段含义：
 
@@ -217,7 +223,7 @@ patches/<source-package-b>/
 
 - 源码仓库内部生成且不应提交的产物，写入 `<source-tree>/.gitignore`。
 - 项目根目录下的本地构建、staging、临时包、符号对比、日志等产物，写入 `/data/usershare/kylinos-local-sources/<component-or-fix>/.gitignore`。
-- 多个客制化项目都会出现的通用临时产物，可考虑写入 `/data/usershare/kylinos-local-sources/.gitignore`，但不要影响各项目必须保留的 `CUSTOMIZATION.md`、`patches/` 和长期 `rollback/`。
+- 多个客制化项目都会出现的通用临时产物，可考虑写入 `/data/usershare/kylinos-local-sources/.gitignore`，但不要影响各项目必须保留的 `CUSTOMIZATION.md`、`patches/` 和用户明确要求长期保留的 `rollback/`。
 
 常见可忽略模式包括：
 
@@ -273,13 +279,13 @@ git checkout -- <tracked-generated-files>
 
 - 用户明确要求后续继续修改时，保留源码树和必要构建目录；只清理重复构建缓存、下载缓存和不再需要的临时包。
 - 如果问题已经通过官方包或配置级方案解决，且用户不需要保留源码，清理源码树和构建目录，只保留必要回滚记录或在 `CUSTOMIZATION.md` 标记为 `rolled-back`。
-- 如果本地客制化修改已经正式安装并持续使用，保留最小回滚包；可继续留在项目目录 `rollback/<timestamp>/`，也可迁移到：
+- 如果本地客制化修改已经正式安装并持续使用，回滚包是否长期保留按用户策略决定。需要文件级快速回滚时，保留最小回滚包；可继续留在项目目录 `rollback/<timestamp>/`，也可迁移到：
 
 ```text
 /data/usershare/kylinos-local-sources/persistent-rollbacks/<component>/<timestamp>/
 ```
 
-迁移后必须更新全局索引和 `CUSTOMIZATION.md` 中的回滚路径。
+迁移后必须更新全局索引和 `CUSTOMIZATION.md` 中的回滚路径。若用户选择不保留本地回滚包，则清理 `rollback/` 后也必须更新索引，把回滚方式改为包管理器恢复官方包或从保存 patch 重新构建安装。
 
 ## 与 skill 知识库的关系
 

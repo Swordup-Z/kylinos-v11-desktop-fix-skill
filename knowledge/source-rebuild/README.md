@@ -11,7 +11,7 @@
 
 ## 子分类
 
-- 本地源码客制化索引、DATA 分区工作区、`CUSTOMIZATION.md` 和回滚包长期保存规则：读取 [local-customization-index.md](local-customization-index.md)。
+- 本地源码客制化索引、DATA 分区工作区、`CUSTOMIZATION.md`、patch 保存和构建/回滚清理规则：读取 [local-customization-index.md](local-customization-index.md)。
 - UKUI 全局搜索默认互联网搜索引擎源码级修改：读取 [ukui-search-web-engine.md](ukui-search-web-engine.md)。
 - UKUI 全局搜索自定义命令 provider 源码级扩展：读取 [ukui-search-command-provider.md](ukui-search-command-provider.md)。
 - UKUI 系统托盘隐藏区稳定性源码级修改：读取 [ukui-system-tray.md](ukui-system-tray.md)。
@@ -90,7 +90,7 @@ mm-cli -c -a
 /data/usershare/kylinos-local-sources/<component-or-fix>/
 ```
 
-每个本地客制化问题应创建独立目录，并至少包含：
+每个本地客制化问题应创建独立目录。源码树和 `CUSTOMIZATION.md` 是长期资产；`build/`、`rollback/`、staging、符号对比文件属于构建或试装阶段产物，可以按验证阶段创建，验证完成后按用户选择清理。常见结构：
 
 ```text
 /data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md
@@ -134,13 +134,15 @@ git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" 
 - `/data/usershare/kylinos-local-sources/README.md`：项目级映射，只记录项目目录、场景、源码包、源码树、patch 目录、状态和 `CUSTOMIZATION.md`。
 - `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md`：项目内映射，记录源码包到二进制包、基线版本、patch、安装文件和回滚包的关系。
 
-如果某个本地客制化修改已经被正式安装并持续使用，应把对应回滚包长期保存。可以保留在该问题目录的 `rollback/<timestamp>/` 下，也可以按组件迁移到：
+回滚包是试装阶段安全网，不是必须长期保留的源码资产。若某个本地客制化修改已经被正式安装并持续使用，且用户希望保留快速文件级回滚入口，可以把对应最小回滚包长期保存；可保留在该问题目录的 `rollback/<timestamp>/` 下，也可以按组件迁移到：
 
 ```text
 /data/usershare/kylinos-local-sources/persistent-rollbacks/<component>/<timestamp>/
 ```
 
 迁移后必须更新 `CUSTOMIZATION.md` 中的回滚路径。
+
+如果用户更重视工作区整洁，并且本地源码 commit 与 patch 已保存、功能已完成运行时验证，可以清理 `build/`、`rollback/`、staging、符号对比文件和其他中间产物，只保留源码树、`patches/` 和索引文件。清理后必须在 `CUSTOMIZATION.md` 中把回滚字段改为“通过包管理器恢复官方包”或“基于保存 patch 重新构建安装”，不要继续引用已删除的 `rollback/<timestamp>/restore.sh`。
 
 ## 源码获取与候选节点收敛
 
