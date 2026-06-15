@@ -11,6 +11,7 @@
 
 ## 子分类
 
+- 本地源码客制化索引、DATA 分区工作区、`CUSTOMIZATION.md` 和回滚包长期保存规则：读取 [local-customization-index.md](local-customization-index.md)。
 - UKUI 全局搜索默认互联网搜索引擎源码级修改：读取 [ukui-search-web-engine.md](ukui-search-web-engine.md)。
 
 后续新增源码重编译问题时，按组件或场景新增文件，例如：
@@ -79,7 +80,7 @@ mm-cli -c -a
 
 ## 本地客制化源码工作区与索引
 
-进行本地源码修改、构建和试装时，除必须由系统包管理器安装到默认系统路径的依赖组件外，源码、构建目录、staging、回滚包、符号对比文件和其他中间产物都应优先放到 DATA 分区的共享工作区，避免占用根分区：
+进行本地源码修改、构建和试装时，先读取 [local-customization-index.md](local-customization-index.md)。除必须由系统包管理器安装到默认系统路径的依赖组件外，源码、构建目录、staging、回滚包、符号对比文件和其他中间产物都应优先放到 DATA 分区的共享工作区，避免占用根分区：
 
 ```text
 /data/usershare/kylinos-local-sources/<component-or-fix>/

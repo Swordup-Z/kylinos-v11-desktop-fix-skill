@@ -14,6 +14,7 @@
 ## 先读知识章节
 
 - 源码重编译通用流程：[`../knowledge/source-rebuild/README.md`](../knowledge/source-rebuild/README.md)
+- 本地源码客制化索引、`CUSTOMIZATION.md`、DATA 分区工作区和回滚包长期保存规则：[`../knowledge/source-rebuild/local-customization-index.md`](../knowledge/source-rebuild/local-customization-index.md)
 - UKUI 全局搜索搜索引擎修改：[`../knowledge/source-rebuild/ukui-search-web-engine.md`](../knowledge/source-rebuild/ukui-search-web-engine.md)
 
 ## 最小诊断

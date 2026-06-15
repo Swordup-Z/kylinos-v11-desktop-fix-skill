@@ -134,7 +134,7 @@ kylinos-desktop-v11-skill/
 │   ├── hardware/             # 指纹、图形、频率
 │   ├── storage/              # 分区、挂载、overlay
 │   ├── agent-tools/          # Codex/Claude/opencode 全局提示词
-│   └── source-rebuild/       # 源码重编译通用流程和具体案例
+│   └── source-rebuild/       # 源码重编译、客制化源码索引和具体案例
 ├── README.md                 # 中文说明
 └── README.en.md              # 英文说明
 ```
@@ -174,7 +174,7 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 | UKUI 开机自启动 | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
 | UKUI 全局快捷键 | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
 | UKUI 全局搜索 | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
-| 源码重编译类修复 | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md)、[`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md) |
+| 源码重编译类修复 | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md)、[`knowledge/source-rebuild/local-customization-index.md`](knowledge/source-rebuild/local-customization-index.md)、[`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md) |
 | UKUI 右侧托盘 | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
 | UKUI 系统服务管理器 | [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md) | [`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
 | AI 子系统清理 | [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md) | [`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
@@ -191,7 +191,7 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 - 只要任务涉及 KylinOS Desktop V11 桌面系统维护场景，就先读取 [`SKILL.md`](SKILL.md)，再根据其中“参考文档”按需读取具体 `references/*.md`；不要一次性预加载所有 reference。
 - `references/` 作为场景分类和路由入口，`knowledge/` 作为具体问题处理章节；reference 指向 knowledge 时才继续读取对应章节。
 - 如果没有命中专门 reference，至少读取通用系统维护文档 [`references/system-maintenance.md`](references/system-maintenance.md)。
-- 如果问题需要重新编译系统源码包、替换系统共享库、评估 ABI/SONAME/依赖/RPATH 风险，或保存本地客制化源码、构建目录和回滚包索引，先读取源码重编译分类入口 [`references/source-rebuild.md`](references/source-rebuild.md)，再按它指向的 `knowledge/source-rebuild/` 章节继续处理。
+- 如果问题需要重新编译系统源码包、替换系统共享库、评估 ABI/SONAME/依赖/RPATH 风险，或保存本地客制化源码、构建目录和回滚包索引，先读取源码重编译分类入口 [`references/source-rebuild.md`](references/source-rebuild.md)，再按它指向的 `knowledge/source-rebuild/` 章节继续处理；本地客制化项目必须在 `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md` 记录索引。
 - 普通代码开发、文档编辑、Git 操作或其他无关任务不要加载该 skill。
 - 按“诊断 -> 修复 -> 验证 -> 沉淀经验”的闭环处理问题。
 - 系统问题默认以持久化修复为目标；临时止血后，还要确认重启、重新登录、服务重拉起或应用重启后是否仍然有效。

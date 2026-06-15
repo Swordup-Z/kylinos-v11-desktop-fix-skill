@@ -249,5 +249,6 @@ busctl --user list | rg 'com.kylin.softwarecenter.getsearchresults|ukui.search' 
 
 - `software-center-search-enable` 默认为 `false`。
 - 设置插件包含新开关字符串。
-- 软件商店 provider 不应常驻；如果只是 `(activatable)`，说明它还没有被当前搜索主动拉起。
+- 如果软件商店 provider 只是 `(activatable)`，说明它还没有被当前搜索主动拉起。
+- `com.kylin.softwarecenter.getsearchresults` 也可能被 `kylin-software-center-plugin-preprocessing` 等软件商店自身链路独立拉起；不能只凭 provider 进程存在判断开关失效，应结合 D-Bus 日志中的请求方、全局搜索实际结果或针对 `ukui-search` 的调用链判断。
 - 设置中打开该开关后，才允许全局搜索调用软件商店 provider。

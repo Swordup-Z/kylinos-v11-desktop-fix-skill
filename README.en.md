@@ -134,7 +134,7 @@ kylinos-desktop-v11-skill/
 │   ├── hardware/             # Fingerprint, graphics, frequency
 │   ├── storage/              # Partitions, mounts, overlay views
 │   ├── agent-tools/          # Codex/Claude/opencode global prompts
-│   └── source-rebuild/       # General source-rebuild workflows and cases
+│   └── source-rebuild/       # Source rebuilds, local customization indexes, and cases
 ├── README.md                 # Chinese README
 └── README.en.md              # English README
 ```
@@ -174,7 +174,7 @@ This README documents both `references/` and `knowledge/`: references are entry 
 | UKUI autostart | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
 | UKUI global shortcuts | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
 | UKUI global search | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
-| Source-rebuild repairs | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md), [`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md) |
+| Source-rebuild repairs | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md), [`knowledge/source-rebuild/local-customization-index.md`](knowledge/source-rebuild/local-customization-index.md), [`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md) |
 | UKUI right-side tray | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
 | UKUI system service manager | [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md) | [`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
 | AI subsystem cleanup | [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md) | [`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
@@ -191,7 +191,7 @@ When using this skill for system troubleshooting, the AI tool must follow these 
 - For any KylinOS Desktop V11 desktop-system maintenance task, read [`SKILL.md`](SKILL.md) first, then selectively read the relevant `references/*.md` files listed there; do not preload every reference file.
 - `references/` is the category and routing layer; `knowledge/` contains concrete troubleshooting chapters. Continue into `knowledge/` only when the selected reference points there.
 - If no specific reference matches, read the general maintenance reference [`references/system-maintenance.md`](references/system-maintenance.md) at minimum.
-- If an issue requires rebuilding a system source package, replacing a system shared library, assessing ABI/SONAME/dependency/RPATH risk, or preserving local customization source trees, build directories, and rollback-package indexes, read the source-rebuild category entry [`references/source-rebuild.md`](references/source-rebuild.md), then continue into the `knowledge/source-rebuild/` chapters it points to.
+- If an issue requires rebuilding a system source package, replacing a system shared library, assessing ABI/SONAME/dependency/RPATH risk, or preserving local customization source trees, build directories, and rollback-package indexes, read the source-rebuild category entry [`references/source-rebuild.md`](references/source-rebuild.md), then continue into the `knowledge/source-rebuild/` chapters it points to; each local customization project must keep its index in `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md`.
 - Do not load this skill for ordinary coding, documentation, Git operations, or unrelated tasks.
 - Follow the loop: diagnosis -> repair -> verification -> record reusable findings.
 - Treat persistent repair as the default goal for system issues; after any runtime workaround, verify whether the fix survives reboot, relogin, service restart, or app restart.
