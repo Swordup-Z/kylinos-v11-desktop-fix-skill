@@ -1,8 +1,8 @@
-# 指纹与生物识别
+# 生物识别认证
 
 ## 定位
 
-这是指纹驱动、`GW_Fingerprint_PA`、Pixelauth T350P 和生物识别服务的分类入口。
+这是生物识别设备、指纹驱动、设备识别和认证服务的分类入口。`GW_Fingerprint_PA` 和 Pixelauth T350P 是当前已沉淀的具体线索。
 
 ## 适用场景
 

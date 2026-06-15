@@ -2,7 +2,7 @@
 
 [English](README.en.md)
 
-用于沉淀和复用 KylinOS Desktop V11 桌面系统问题的诊断、修复与验证经验，覆盖应用安装与包管理、UKUI、KARE/Kaiming、Clash Verge TUN、开机自启动、维护模式、磐石架构、系统服务、图形/频率、托盘、全局搜索、需要源码重编译的系统组件修复评估、AI 子系统、分区挂载、overlay、系统噪声清理和 AI 工具全局提示词等场景。
+用于沉淀和复用 KylinOS Desktop V11 桌面系统问题的诊断、修复与验证经验，覆盖应用安装与包管理、UKUI、应用隔离环境、代理/TUN、开机自启动、维护模式、磐石架构、系统服务、图形/频率、托盘、全局搜索、需要源码重编译的系统组件修复评估、桌面 AI 组件、分区挂载、overlay、系统噪声清理和 AI 工具全局提示词等场景。
 
 ## 安装方式
 
@@ -122,18 +122,19 @@ AI 工具应先读取 `SKILL.md`，再按需读取相关 `references/*.md`；如
 kylinos-desktop-v11-skill/
 ├── SKILL.md                  # 总入口：判断问题大类和选择最小 reference
 ├── references/               # 场景分类和路由入口，类似词典目录
+│   ├── README.md             # reference 命名和路由规则
 │   ├── system-maintenance.md  # 通用维护模式、安全边界和最小闭环
 │   ├── ukui-search.md         # UKUI 全局搜索分类入口
 │   └── ...
 ├── knowledge/                # 具体问题处理章节
 │   ├── README.md             # knowledge 与 references 的分工说明
-│   ├── system/               # 系统维护、安全边界、系统噪声
-│   ├── applications/         # 应用安装、KARE 边界
-│   ├── ukui/                 # UKUI 自启动、搜索、托盘、服务
-│   ├── network/              # Clash Verge / TUN
-│   ├── hardware/             # 指纹、图形、频率
-│   ├── storage/              # 分区、挂载、overlay
-│   ├── agent-tools/          # Codex/Claude/opencode 全局提示词
+│   ├── system/               # 含 README.md；系统维护、安全边界、系统噪声
+│   ├── applications/         # 含 README.md；应用安装、隔离环境边界
+│   ├── ukui/                 # 含 README.md；UKUI 自启动、搜索、托盘、服务
+│   ├── network/              # 含 README.md；代理与 TUN
+│   ├── hardware/             # 含 README.md；生物识别、图形、频率
+│   ├── storage/              # 含 README.md；分区、挂载、overlay
+│   ├── agent-tools/          # 含 README.md；Codex/Claude/opencode 全局提示词
 │   └── source-rebuild/       # 源码重编译、客制化源码索引和具体案例
 ├── README.md                 # 中文说明
 └── README.en.md              # 英文说明
@@ -166,23 +167,23 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 
 | 场景 | Reference 入口 | Knowledge 章节 |
 | --- | --- | --- |
-| 通用系统维护、维护模式、磐石架构边界 | [`references/system-maintenance.md`](references/system-maintenance.md) | [`knowledge/system/system-maintenance.md`](knowledge/system/system-maintenance.md) |
-| 系统体检噪声清理 | [`references/system-health-noise.md`](references/system-health-noise.md) | [`knowledge/system/system-health-noise.md`](knowledge/system/system-health-noise.md) |
-| 应用安装、AppImage、第三方 apt 源 | [`references/application-installation.md`](references/application-installation.md) | [`knowledge/applications/application-installation.md`](knowledge/applications/application-installation.md) |
-| KARE 与宿主机边界 | [`references/kare-namespace.md`](references/kare-namespace.md) | [`knowledge/applications/kare-namespace.md`](knowledge/applications/kare-namespace.md) |
-| Clash Verge / TUN | [`references/clash-verge-tun.md`](references/clash-verge-tun.md) | [`knowledge/network/clash-verge-tun.md`](knowledge/network/clash-verge-tun.md) |
-| UKUI 开机自启动 | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
-| UKUI 全局快捷键 | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
-| UKUI 全局搜索 | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
+| 通用系统维护、维护模式、磐石架构边界 | [`references/system-maintenance.md`](references/system-maintenance.md) | [`knowledge/system/README.md`](knowledge/system/README.md)、[`knowledge/system/system-maintenance.md`](knowledge/system/system-maintenance.md) |
+| 系统体检噪声清理 | [`references/system-health-noise.md`](references/system-health-noise.md) | [`knowledge/system/README.md`](knowledge/system/README.md)、[`knowledge/system/system-health-noise.md`](knowledge/system/system-health-noise.md) |
+| 应用安装、AppImage、第三方 apt 源 | [`references/application-installation.md`](references/application-installation.md) | [`knowledge/applications/README.md`](knowledge/applications/README.md)、[`knowledge/applications/application-installation.md`](knowledge/applications/application-installation.md) |
+| 应用隔离与宿主机边界 | [`references/application-isolation.md`](references/application-isolation.md) | [`knowledge/applications/README.md`](knowledge/applications/README.md)、[`knowledge/applications/kare-namespace.md`](knowledge/applications/kare-namespace.md) |
+| 代理与 TUN | [`references/proxy-tun.md`](references/proxy-tun.md) | [`knowledge/network/README.md`](knowledge/network/README.md)、[`knowledge/network/clash-verge-tun.md`](knowledge/network/clash-verge-tun.md) |
+| UKUI 开机自启动 | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md)、[`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
+| UKUI 全局快捷键 | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md)、[`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
+| UKUI 全局搜索 | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md)、[`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
 | 源码重编译类修复 | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md)、[`knowledge/source-rebuild/local-customization-index.md`](knowledge/source-rebuild/local-customization-index.md)、[`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md)、[`knowledge/source-rebuild/ukui-system-tray.md`](knowledge/source-rebuild/ukui-system-tray.md) |
-| UKUI 右侧托盘 | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
-| UKUI 系统服务管理器 | [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md) | [`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
-| AI 子系统清理 | [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md) | [`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
-| 指纹/生物识别 | [`references/biometric-fingerprint.md`](references/biometric-fingerprint.md) | [`knowledge/hardware/biometric-fingerprint.md`](knowledge/hardware/biometric-fingerprint.md) |
-| 图形、频率与硬件稳定性 | [`references/graphics-frequency.md`](references/graphics-frequency.md) | [`knowledge/hardware/graphics-frequency.md`](knowledge/hardware/graphics-frequency.md) |
-| 分区、挂载、overlay | [`references/storage-layout.md`](references/storage-layout.md) | [`knowledge/storage/layout.md`](knowledge/storage/layout.md) |
-| Codex 配置 | [`references/codex-config.md`](references/codex-config.md) | [`knowledge/agent-tools/codex-config.md`](knowledge/agent-tools/codex-config.md) |
-| 多 AI 工具全局提示词 | [`references/agent-global-prompts.md`](references/agent-global-prompts.md) | [`knowledge/agent-tools/global-prompts.md`](knowledge/agent-tools/global-prompts.md) |
+| UKUI 右侧托盘 | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md)、[`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
+| 桌面服务启动与 D-Bus Activation | [`references/desktop-service-activation.md`](references/desktop-service-activation.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md)、[`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
+| 桌面 AI 组件清理 | [`references/desktop-ai-components.md`](references/desktop-ai-components.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md)、[`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
+| 生物识别认证 | [`references/biometric-authentication.md`](references/biometric-authentication.md) | [`knowledge/hardware/README.md`](knowledge/hardware/README.md)、[`knowledge/hardware/biometric-fingerprint.md`](knowledge/hardware/biometric-fingerprint.md) |
+| 图形、频率与硬件稳定性 | [`references/graphics-frequency.md`](references/graphics-frequency.md) | [`knowledge/hardware/README.md`](knowledge/hardware/README.md)、[`knowledge/hardware/graphics-frequency.md`](knowledge/hardware/graphics-frequency.md) |
+| 分区、挂载、overlay | [`references/storage-layout.md`](references/storage-layout.md) | [`knowledge/storage/README.md`](knowledge/storage/README.md)、[`knowledge/storage/layout.md`](knowledge/storage/layout.md) |
+| AI 工具权限 | [`references/agent-tool-permissions.md`](references/agent-tool-permissions.md) | [`knowledge/agent-tools/README.md`](knowledge/agent-tools/README.md)、[`knowledge/agent-tools/codex-config.md`](knowledge/agent-tools/codex-config.md) |
+| 多 AI 工具全局提示词 | [`references/agent-global-prompts.md`](references/agent-global-prompts.md) | [`knowledge/agent-tools/README.md`](knowledge/agent-tools/README.md)、[`knowledge/agent-tools/global-prompts.md`](knowledge/agent-tools/global-prompts.md) |
 
 ## 核心基础要求
 
@@ -226,17 +227,17 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 - AppImage 缺少 `libfuse.so.2`、`libfuse2` 安装与验证：[`references/application-installation.md`](references/application-installation.md)
 - 第三方 apt 源残留、公钥缺失、`NO_PUBKEY`、用户明确删除应用后的源配置清理：[`references/application-installation.md`](references/application-installation.md)
 
-### KARE 与宿主机边界
+### 应用隔离与宿主机边界
 
-- KARE namespace、应用内 hostname 显示 `kare`、宿主机 hostname 验证和 KARE base 环境风险：[`references/kare-namespace.md`](references/kare-namespace.md)
-- KARE 桌面入口覆盖、开始菜单固定项仍指向 KARE、宿主机原生入口验证：[`references/kare-namespace.md`](references/kare-namespace.md)
-- 从 KARE 环境误启动 UKUI 面板后的恢复与 namespace 验证：[`references/kare-namespace.md`](references/kare-namespace.md)
+- 应用隔离环境、KARE/Kaiming namespace、应用内 hostname 显示 `kare`、宿主机 hostname 验证和隔离环境风险：[`references/application-isolation.md`](references/application-isolation.md)
+- 隔离环境桌面入口覆盖、开始菜单固定项仍指向 KARE/Kaiming、宿主机原生入口验证：[`references/application-isolation.md`](references/application-isolation.md)
+- 从隔离环境误启动 UKUI 面板后的恢复与 namespace 验证：[`references/application-isolation.md`](references/application-isolation.md)
 
-### 网络代理与 Clash Verge
+### 网络代理与 TUN
 
-- Clash Verge Rev TUN 模式安装失败、`/dev/net/tun` 缺失、TUN 设备持久化：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
-- `clash-verge-service` 安装、启动、状态验证和权限问题：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
-- `verge-mihomo` 路径不一致、核心丢失、KARE shadow/upper 路径恢复，以及代理组消失后的排查：[`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+- 代理客户端 TUN 模式安装失败、`/dev/net/tun` 缺失、TUN 设备持久化：[`references/proxy-tun.md`](references/proxy-tun.md)
+- 代理服务安装、启动、状态验证和权限问题，例如 Clash Verge Rev 的 `clash-verge-service`：[`references/proxy-tun.md`](references/proxy-tun.md)
+- 代理核心路径不一致、核心丢失、隔离环境 shadow/upper 路径恢复，以及代理组消失后的排查：[`references/proxy-tun.md`](references/proxy-tun.md)
 
 ### UKUI 桌面与系统服务
 
@@ -245,12 +246,12 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 - UKUI 全局搜索结果来源、应用商店未安装应用结果、软件商店搜索 D-Bus 插件屏蔽与回滚：[`references/ukui-search.md`](references/ukui-search.md)
 - UKUI 全局搜索默认互联网搜索引擎写死、需要通过源码级修改添加 Bing/Google 或应用商店结果开关等选项时的源码匹配、构建、ABI 风险评估和本地客制化源码索引：[`references/source-rebuild.md`](references/source-rebuild.md)
 - UKUI 右侧托盘小图标顺序和隐藏区不持久、主显示区应用退出后隐藏项自动补位、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
-- `ukui-system-service-manager.service` 反复 timeout、`QDBusError("", "")`、`org.ukui.serviceManager` 被孤儿进程占用、启动顺序竞态导致的面板/任务栏异常、D-Bus activation 持久化修复：[`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
-- 任务栏/托盘 AI 助手、AI 子系统、Kaiming AI 助手卸载边界和残留清理：[`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
+- 桌面服务启动 timeout、D-Bus activation 失败、服务名被孤儿进程占用、启动顺序竞态导致的面板/任务栏异常、持久化修复：[`references/desktop-service-activation.md`](references/desktop-service-activation.md)
+- 任务栏/托盘 AI 助手、桌面 AI 组件、Kaiming AI 助手卸载边界和残留清理：[`references/desktop-ai-components.md`](references/desktop-ai-components.md)
 
-### 指纹与生物识别
+### 生物识别认证
 
-- `GW_Fingerprint_PA` 指纹驱动恢复、Pixelauth T350P 包安装、`biometric-authentication.service` 验证、驱动已注册但设备未发现的诊断：[`references/biometric-fingerprint.md`](references/biometric-fingerprint.md)
+- 生物识别认证、指纹驱动恢复、认证服务验证、驱动已注册但设备未发现的诊断：[`references/biometric-authentication.md`](references/biometric-authentication.md)
 
 ### 图形、频率与硬件相关稳定性
 
@@ -266,7 +267,7 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 
 ### AI 工具配置与经验复用
 
-- Codex 用户级配置、默认 full access、权限显示、维护模式/root 权限边界：[`references/codex-config.md`](references/codex-config.md)
+- AI 工具用户级权限、Codex 默认 full access、权限显示、维护模式/root 权限边界：[`references/agent-tool-permissions.md`](references/agent-tool-permissions.md)
 - Codex、Claude Code、opencode 等多工具全局提示词入口、自动安装提示词、渐进式披露加载模板：[`references/agent-global-prompts.md`](references/agent-global-prompts.md)
 
 ## 安全边界

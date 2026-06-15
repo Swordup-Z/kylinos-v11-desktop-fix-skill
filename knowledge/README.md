@@ -30,11 +30,13 @@ knowledge/storage/
 knowledge/agent-tools/
 ```
 
-目录下应包含一个 `README.md` 说明该分类的通用流程；具体问题使用独立章节文件，例如：
+目录下应包含一个 `README.md` 说明该分类下有哪些具体知识章节；具体问题使用独立章节文件，例如：
 
 ```text
 knowledge/source-rebuild/ukui-search-web-engine.md
 ```
+
+`references/` 文件名应按功能或属性命名，不按具体包名命名；`knowledge/` 文件可以按具体组件或问题细分命名。也就是说，`references/proxy-tun.md` 是代理/TUN 场景入口，`knowledge/network/clash-verge-tun.md` 是 Clash Verge Rev 的具体知识章节。
 
 ## 章节要求
 

@@ -143,7 +143,7 @@ apt-cache policy <package>
 本文档只保留系统级修复的底座规则。具体场景应继续按需读取对应 reference：
 
 - 应用安装、AppImage、KARE 环境误装、第三方 apt 源和公钥问题：读取 [`../../references/application-installation.md`](../../references/application-installation.md)。
-- KARE namespace、应用内 hostname 显示 `kare`、从 KARE 误启动 UKUI 面板、开始菜单固定项仍指向 KARE：读取 [`../../references/kare-namespace.md`](../../references/kare-namespace.md)。
+- 应用隔离与宿主机边界、KARE/Kaiming namespace、应用内 hostname 显示 `kare`、从隔离环境误启动 UKUI 面板、开始菜单固定项仍指向隔离环境：读取 [`../../references/application-isolation.md`](../../references/application-isolation.md)。
 - 全盘体检后的系统噪声清理、`motd-news.service`、PAM 残留引用、rsyslog 旧式配置：读取 [`../../references/system-health-noise.md`](../../references/system-health-noise.md)。
 
 ## 未覆盖问题的经验沉淀

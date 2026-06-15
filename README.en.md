@@ -2,7 +2,7 @@
 
 [中文](README.md)
 
-A reusable skill and knowledge base for diagnosing, fixing, verifying, and recording KylinOS Desktop V11 system issues. It covers application installation and package management, UKUI, KARE/Kaiming, Clash Verge TUN, autostart, maintenance mode, system services, graphics/frequency issues, tray behavior, global search, source-rebuild assessment for system-component fixes, AI subsystem cleanup, partitions, mounts, overlay views, system-noise cleanup, global prompts for AI tools, and the PanShi system architecture.
+A reusable skill and knowledge base for diagnosing, fixing, verifying, and recording KylinOS Desktop V11 system issues. It covers application installation and package management, UKUI, application isolation environments, proxy/TUN, autostart, maintenance mode, system services, graphics/frequency issues, tray behavior, global search, source-rebuild assessment for system-component fixes, desktop AI component cleanup, partitions, mounts, overlay views, system-noise cleanup, global prompts for AI tools, and the PanShi system architecture.
 
 ## Installation
 
@@ -122,18 +122,19 @@ This repository uses progressive disclosure so AI tools do not load unnecessary 
 kylinos-desktop-v11-skill/
 ├── SKILL.md                  # Main entry: classify the issue and choose the minimal reference
 ├── references/               # Scenario categories and routing entries, like a dictionary index
+│   ├── README.md             # Reference naming and routing rules
 │   ├── system-maintenance.md  # Maintenance mode, safety boundaries, and the minimal loop
 │   ├── ukui-search.md         # UKUI global-search category entry
 │   └── ...
 ├── knowledge/                # Concrete troubleshooting chapters
 │   ├── README.md             # How knowledge/ differs from references/
-│   ├── system/               # System maintenance, safety boundaries, system noise
-│   ├── applications/         # Application installation and KARE boundaries
-│   ├── ukui/                 # UKUI autostart, search, tray, services
-│   ├── network/              # Clash Verge / TUN
-│   ├── hardware/             # Fingerprint, graphics, frequency
-│   ├── storage/              # Partitions, mounts, overlay views
-│   ├── agent-tools/          # Codex/Claude/opencode global prompts
+│   ├── system/               # Includes README.md; maintenance, safety, system noise
+│   ├── applications/         # Includes README.md; installation and isolation boundaries
+│   ├── ukui/                 # Includes README.md; autostart, search, tray, services
+│   ├── network/              # Includes README.md; proxy and TUN
+│   ├── hardware/             # Includes README.md; biometrics, graphics, frequency
+│   ├── storage/              # Includes README.md; partitions, mounts, overlay views
+│   ├── agent-tools/          # Includes README.md; Codex/Claude/opencode prompts
 │   └── source-rebuild/       # Source rebuilds, local customization indexes, and cases
 ├── README.md                 # Chinese README
 └── README.en.md              # English README
@@ -166,23 +167,23 @@ This README documents both `references/` and `knowledge/`: references are entry 
 
 | Scenario | Reference entry | Knowledge chapter |
 | --- | --- | --- |
-| General system maintenance, maintenance mode, PanShi boundaries | [`references/system-maintenance.md`](references/system-maintenance.md) | [`knowledge/system/system-maintenance.md`](knowledge/system/system-maintenance.md) |
-| System health noise cleanup | [`references/system-health-noise.md`](references/system-health-noise.md) | [`knowledge/system/system-health-noise.md`](knowledge/system/system-health-noise.md) |
-| Application installation, AppImage, third-party apt sources | [`references/application-installation.md`](references/application-installation.md) | [`knowledge/applications/application-installation.md`](knowledge/applications/application-installation.md) |
-| KARE and host boundaries | [`references/kare-namespace.md`](references/kare-namespace.md) | [`knowledge/applications/kare-namespace.md`](knowledge/applications/kare-namespace.md) |
-| Clash Verge / TUN | [`references/clash-verge-tun.md`](references/clash-verge-tun.md) | [`knowledge/network/clash-verge-tun.md`](knowledge/network/clash-verge-tun.md) |
-| UKUI autostart | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
-| UKUI global shortcuts | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
-| UKUI global search | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
+| General system maintenance, maintenance mode, PanShi boundaries | [`references/system-maintenance.md`](references/system-maintenance.md) | [`knowledge/system/README.md`](knowledge/system/README.md), [`knowledge/system/system-maintenance.md`](knowledge/system/system-maintenance.md) |
+| System health noise cleanup | [`references/system-health-noise.md`](references/system-health-noise.md) | [`knowledge/system/README.md`](knowledge/system/README.md), [`knowledge/system/system-health-noise.md`](knowledge/system/system-health-noise.md) |
+| Application installation, AppImage, third-party apt sources | [`references/application-installation.md`](references/application-installation.md) | [`knowledge/applications/README.md`](knowledge/applications/README.md), [`knowledge/applications/application-installation.md`](knowledge/applications/application-installation.md) |
+| Application isolation and host boundaries | [`references/application-isolation.md`](references/application-isolation.md) | [`knowledge/applications/README.md`](knowledge/applications/README.md), [`knowledge/applications/kare-namespace.md`](knowledge/applications/kare-namespace.md) |
+| Proxy and TUN | [`references/proxy-tun.md`](references/proxy-tun.md) | [`knowledge/network/README.md`](knowledge/network/README.md), [`knowledge/network/clash-verge-tun.md`](knowledge/network/clash-verge-tun.md) |
+| UKUI autostart | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md), [`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
+| UKUI global shortcuts | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md), [`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
+| UKUI global search | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md), [`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
 | Source-rebuild repairs | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md), [`knowledge/source-rebuild/local-customization-index.md`](knowledge/source-rebuild/local-customization-index.md), [`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md), [`knowledge/source-rebuild/ukui-system-tray.md`](knowledge/source-rebuild/ukui-system-tray.md) |
-| UKUI right-side tray | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
-| UKUI system service manager | [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md) | [`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
-| AI subsystem cleanup | [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md) | [`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
-| Fingerprint and biometrics | [`references/biometric-fingerprint.md`](references/biometric-fingerprint.md) | [`knowledge/hardware/biometric-fingerprint.md`](knowledge/hardware/biometric-fingerprint.md) |
-| Graphics, frequency, hardware stability | [`references/graphics-frequency.md`](references/graphics-frequency.md) | [`knowledge/hardware/graphics-frequency.md`](knowledge/hardware/graphics-frequency.md) |
-| Partitions, mounts, overlay views | [`references/storage-layout.md`](references/storage-layout.md) | [`knowledge/storage/layout.md`](knowledge/storage/layout.md) |
-| Codex config | [`references/codex-config.md`](references/codex-config.md) | [`knowledge/agent-tools/codex-config.md`](knowledge/agent-tools/codex-config.md) |
-| Multi-tool global prompts | [`references/agent-global-prompts.md`](references/agent-global-prompts.md) | [`knowledge/agent-tools/global-prompts.md`](knowledge/agent-tools/global-prompts.md) |
+| UKUI right-side tray | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md), [`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
+| Desktop service activation | [`references/desktop-service-activation.md`](references/desktop-service-activation.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md), [`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
+| Desktop AI component cleanup | [`references/desktop-ai-components.md`](references/desktop-ai-components.md) | [`knowledge/ukui/README.md`](knowledge/ukui/README.md), [`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
+| Biometric authentication | [`references/biometric-authentication.md`](references/biometric-authentication.md) | [`knowledge/hardware/README.md`](knowledge/hardware/README.md), [`knowledge/hardware/biometric-fingerprint.md`](knowledge/hardware/biometric-fingerprint.md) |
+| Graphics, frequency, hardware stability | [`references/graphics-frequency.md`](references/graphics-frequency.md) | [`knowledge/hardware/README.md`](knowledge/hardware/README.md), [`knowledge/hardware/graphics-frequency.md`](knowledge/hardware/graphics-frequency.md) |
+| Partitions, mounts, overlay views | [`references/storage-layout.md`](references/storage-layout.md) | [`knowledge/storage/README.md`](knowledge/storage/README.md), [`knowledge/storage/layout.md`](knowledge/storage/layout.md) |
+| AI tool permissions | [`references/agent-tool-permissions.md`](references/agent-tool-permissions.md) | [`knowledge/agent-tools/README.md`](knowledge/agent-tools/README.md), [`knowledge/agent-tools/codex-config.md`](knowledge/agent-tools/codex-config.md) |
+| Multi-tool global prompts | [`references/agent-global-prompts.md`](references/agent-global-prompts.md) | [`knowledge/agent-tools/README.md`](knowledge/agent-tools/README.md), [`knowledge/agent-tools/global-prompts.md`](knowledge/agent-tools/global-prompts.md) |
 
 ## Core Requirements
 
@@ -226,17 +227,17 @@ The skill currently covers the issue types below. `references/` is the category 
 - AppImage `libfuse.so.2` failures, `libfuse2` installation, and verification: [`references/application-installation.md`](references/application-installation.md)
 - Stale third-party apt sources, missing signing keys, `NO_PUBKEY`, and source cleanup after the user chooses to remove an application: [`references/application-installation.md`](references/application-installation.md)
 
-### KARE And Host Boundaries
+### Application Isolation And Host Boundaries
 
-- KARE namespaces, applications showing hostname as `kare`, host hostname validation, and KARE base-environment risks: [`references/kare-namespace.md`](references/kare-namespace.md)
-- KARE desktop-entry overrides, pinned menu entries still pointing to KARE, and host-native entry validation: [`references/kare-namespace.md`](references/kare-namespace.md)
-- Recovery after accidentally starting the UKUI panel from a KARE environment, including namespace validation: [`references/kare-namespace.md`](references/kare-namespace.md)
+- Application isolation environments, KARE/Kaiming namespaces, applications showing hostname as `kare`, host hostname validation, and isolation-boundary risks: [`references/application-isolation.md`](references/application-isolation.md)
+- Isolated-environment desktop-entry overrides, pinned menu entries still pointing to KARE/Kaiming, and host-native entry validation: [`references/application-isolation.md`](references/application-isolation.md)
+- Recovery after accidentally starting the UKUI panel from an isolated environment, including namespace validation: [`references/application-isolation.md`](references/application-isolation.md)
 
-### Network Proxy And Clash Verge
+### Network Proxy And TUN
 
-- Clash Verge Rev TUN installation failures, missing `/dev/net/tun`, and persistent TUN device handling: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
-- `clash-verge-service` installation, startup, status validation, and permission issues: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
-- Missing or misplaced `verge-mihomo`, KARE shadow/upper path recovery, and proxy group disappearance after core-path problems: [`references/clash-verge-tun.md`](references/clash-verge-tun.md)
+- Proxy-client TUN installation failures, missing `/dev/net/tun`, and persistent TUN device handling: [`references/proxy-tun.md`](references/proxy-tun.md)
+- Proxy service installation, startup, status validation, and permission issues, such as Clash Verge Rev `clash-verge-service`: [`references/proxy-tun.md`](references/proxy-tun.md)
+- Missing or misplaced proxy cores, isolated-environment shadow/upper path recovery, and proxy group disappearance after core-path problems: [`references/proxy-tun.md`](references/proxy-tun.md)
 
 ### UKUI Desktop And System Services
 
@@ -245,12 +246,12 @@ The skill currently covers the issue types below. `references/` is the category 
 - UKUI global-search result sources, Software Center results for uninstalled apps, and disabling or rolling back the Software Center search D-Bus provider: [`references/ukui-search.md`](references/ukui-search.md)
 - Source matching, building, ABI-risk checks, and local customization indexing for adding Bing/Google, Software Center result toggles, or other hard-coded UKUI global-search options: [`references/source-rebuild.md`](references/source-rebuild.md)
 - UKUI right-side system tray icon order and folded/hidden area persistence, hidden items filling visible gaps after a visible app exits, `systemTray.json`, `orderedItems`, and `separateIndex`: [`references/ukui-system-tray.md`](references/ukui-system-tray.md)
-- `ukui-system-service-manager.service` repeated timeouts, `QDBusError("", "")`, `org.ukui.serviceManager` owned by an orphan process, panel/taskbar issues caused by startup-order races, and persistent D-Bus activation repair: [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
-- Taskbar/tray AI assistant, AI subsystem cleanup, Kaiming AI assistant removal boundaries, and residue cleanup: [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
+- Desktop service startup timeouts, D-Bus activation failures, service names owned by orphan processes, panel/taskbar issues caused by startup-order races, and persistent activation repair: [`references/desktop-service-activation.md`](references/desktop-service-activation.md)
+- Taskbar/tray AI assistants, desktop AI components, Kaiming AI assistant removal boundaries, and residue cleanup: [`references/desktop-ai-components.md`](references/desktop-ai-components.md)
 
-### Fingerprint And Biometrics
+### Biometric Authentication
 
-- `GW_Fingerprint_PA` fingerprint driver recovery, Pixelauth T350P package installation, `biometric-authentication.service` validation, and diagnostics for registered drivers whose devices are not detected: [`references/biometric-fingerprint.md`](references/biometric-fingerprint.md)
+- Biometric authentication, fingerprint driver recovery, authentication-service validation, and diagnostics for registered drivers whose devices are not detected: [`references/biometric-authentication.md`](references/biometric-authentication.md)
 
 ### Graphics, Frequency, And Hardware-Specific Stability
 
@@ -266,7 +267,7 @@ The skill currently covers the issue types below. `references/` is the category 
 
 ### AI Tool Configuration And Reuse
 
-- Codex user-level config, default full access, permission display, and maintenance-mode/root permission boundaries: [`references/codex-config.md`](references/codex-config.md)
+- AI tool user-level permissions, Codex default full access, permission display, and maintenance-mode/root permission boundaries: [`references/agent-tool-permissions.md`](references/agent-tool-permissions.md)
 - Multi-tool global prompt entry points for Codex, Claude Code, opencode, AI-install prompt, and progressive loading template: [`references/agent-global-prompts.md`](references/agent-global-prompts.md)
 
 ## Safety
