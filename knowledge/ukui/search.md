@@ -91,6 +91,8 @@ git ls-remote --heads https://gitee.com/openkylin/ukui-search.git | rg 'openkyli
 - 命令项用 `command` + `args` 数组描述，运行时使用 `QProcess` 直接执行，不经 shell。
 - 破坏性动作应设置 `confirm=true` 并提供 `confirmMessage`。
 - 新命令只改用户级 JSON 配置，不需要继续修改 C++ 源码。
+- 如果用户觉得手动编辑 JSON 麻烦，可以在全局搜索设置页新增“自定义命令”入口，打开图形化配置对话框，读写同一个用户级 JSON；这是更适合普通用户的配置方式。
+- 为了让配置可迁移，provider 可支持 `~`、`$HOME`、`${HOME}` 在 `command`、`args`、`workingDirectory` 单个 token 内展开。例如打开下载目录可写成 `command=xdg-open`、`args=["$HOME/下载"]`、`detached=true`，不要硬编码 `/home/<user>/下载`。
 
 如果当前系统没有该 provider，需要源码级扩展 `libukui-search`，继续读取 [`../source-rebuild/ukui-search-command-provider.md`](../source-rebuild/ukui-search-command-provider.md)。
 

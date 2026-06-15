@@ -252,7 +252,7 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 - UKUI 全局快捷键冲突、设置界面提示快捷键被系统占用、全局搜索快捷键、`Alt+Space` 与窗口菜单冲突：[`references/ukui-keybindings.md`](references/ukui-keybindings.md)
 - UKUI 全局搜索结果来源、应用商店未安装应用结果、软件商店搜索 D-Bus 插件屏蔽与回滚：[`references/ukui-search.md`](references/ukui-search.md)
 - UKUI 全局搜索默认互联网搜索引擎写死、需要通过源码级修改添加 Bing/Google、应用商店结果开关或自定义命令 provider 等选项时的源码匹配、构建、ABI 风险评估和本地客制化源码索引：[`references/source-rebuild.md`](references/source-rebuild.md)
-- UKUI 全局搜索自定义命令 provider，例如通过用户级 JSON 配置添加“清空回收站”等系统动作：[`references/ukui-search.md`](references/ukui-search.md)、[`knowledge/source-rebuild/ukui-search-command-provider.md`](knowledge/source-rebuild/ukui-search-command-provider.md)
+- UKUI 全局搜索自定义命令 provider，例如通过用户级 JSON 或设置页图形化入口添加“清空回收站”等系统动作：[`references/ukui-search.md`](references/ukui-search.md)、[`knowledge/source-rebuild/ukui-search-command-provider.md`](knowledge/source-rebuild/ukui-search-command-provider.md)
 - UKUI 右侧托盘小图标顺序和隐藏区不持久、主显示区应用退出后隐藏项自动补位、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
 - 桌面服务启动 timeout、D-Bus activation 失败、服务名被孤儿进程占用、启动顺序竞态导致的面板/任务栏异常、持久化修复：[`references/desktop-service-activation.md`](references/desktop-service-activation.md)
 - 任务栏/托盘 AI 助手、桌面 AI 组件、Kaiming AI 助手卸载边界和残留清理：[`references/desktop-ai-components.md`](references/desktop-ai-components.md)

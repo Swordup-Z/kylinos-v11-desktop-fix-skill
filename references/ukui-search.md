@@ -10,12 +10,13 @@
 - 需要屏蔽软件商店搜索 D-Bus 提供者。
 - 默认互联网搜索引擎选项写死，需要新增或隐藏选项。
 - 希望在全局搜索中执行系统动作或自定义命令，例如清空回收站。
+- 希望把自定义命令 JSON 配置迁移到设置界面的图形化配置入口。
 
 ## 先读知识章节
 
 - 全局搜索结果来源和软件商店结果屏蔽：[`../knowledge/ukui/search.md`](../knowledge/ukui/search.md)
 - 如果需要源码级修改搜索引擎：[`../knowledge/source-rebuild/README.md`](../knowledge/source-rebuild/README.md)，再读 [`../knowledge/source-rebuild/ukui-search-web-engine.md`](../knowledge/source-rebuild/ukui-search-web-engine.md)
-- 如果需要源码级新增自定义命令 provider：[`../knowledge/source-rebuild/README.md`](../knowledge/source-rebuild/README.md)，再读 [`../knowledge/source-rebuild/ukui-search-command-provider.md`](../knowledge/source-rebuild/ukui-search-command-provider.md)
+- 如果需要源码级新增自定义命令 provider 或设置页图形化命令配置入口：[`../knowledge/source-rebuild/README.md`](../knowledge/source-rebuild/README.md)，再读 [`../knowledge/source-rebuild/ukui-search-command-provider.md`](../knowledge/source-rebuild/ukui-search-command-provider.md)
 
 ## 最小诊断
 

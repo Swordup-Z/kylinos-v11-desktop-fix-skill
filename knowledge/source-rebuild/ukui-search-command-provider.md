@@ -9,11 +9,13 @@
 ## 设计原则
 
 - 优先做通用 provider，不要为每个动作都硬编码 C++ 分支。
-- provider 从用户级配置读取命令项，新增命令时只改配置文件。
+- provider 从用户级配置读取命令项，新增命令时优先通过设置界面的图形入口修改配置；没有图形入口时再手工编辑配置文件。
 - 配置使用 `command` + `args` 数组，由 `QProcess` 直接执行，不经过 shell。
 - 默认不支持 shell 字符串拼接；如确需复杂 shell，应由用户明确配置 `command=/bin/sh`、`args=["-c", "..."]` 并承担注入风险。
+- 为了避免在配置中硬编码用户名，可以支持 `~`、`$HOME`、`${HOME}` 在 `command`、`args`、`workingDirectory` 单个 token 内展开为当前用户目录；该展开不是 shell，不处理任意环境变量、通配符、管道或重定向。
 - 破坏性命令应支持 `confirm=true` 和 `confirmMessage`，执行前弹确认。
 - provider 应作为全局搜索普通搜索插件注册，保留插件启停、排序和 best match 行为。
+- 如果用户觉得手写 JSON 麻烦，推荐在 `search-ukcc-plugin` 的全局搜索设置页增加“自定义命令”入口，打开图形化配置对话框，直接读写同一个 `custom-commands.json`。
 
 ## 用户级配置格式
 
@@ -62,6 +64,13 @@ $HOME/.config/org.ukui/ukui-search/custom-commands.json
 - `timeout`：非 detached 命令等待超时。
 - `showInBestMatch`：是否进入最佳匹配。
 
+可读性建议：
+
+- 路径参数优先写成 `$HOME/下载`、`~/Documents` 这类形式，不要硬编码 `/home/<user>/...`。
+- 每个参数仍然是数组中的一个元素；不要写成一整段 shell 字符串。
+- 需要打开目录这类动作时，可配置为 `command=xdg-open`、`args=["$HOME/下载"]`、`detached=true`。
+- 如果已经实现设置页图形化入口，该入口保存时应使用缩进后的 JSON，保留未知顶层字段，并只更新 `commands` 数组；这样既方便人工审阅，也避免破坏未来扩展字段。
+
 ## 最小源码修改位置
 
 常见源码目录：
@@ -73,6 +82,9 @@ libsearch/CMakeLists.txt
 libsearch/pluginmanage/search-plugin-manager.cpp
 libsearch/pluginmanage/search-plugin-manager.h
 translations/libukui-search/libukui-search_zh_CN.ts
+search-ukcc-plugin/search.cpp
+search-ukcc-plugin/search.h
+search-ukcc-plugin/translations/zh_CN.ts
 ```
 
 实现要点：
@@ -84,6 +96,13 @@ translations/libukui-search/libukui-search_zh_CN.ts
 - 首次配置不存在时可创建默认配置，但不要覆盖用户已有配置。
 - 在 `SearchPluginManager` 默认插件顺序中加入 `Command Search`，通常放在 `Web Page` 前。
 - 对已有用户配置做增量迁移：旧配置存在但缺少 `Command Search` 时，应追加该插件，而不是因为版本号相同就跳过。
+- 如需图形化配置，在 `search-ukcc-plugin/search.cpp` 中增加“自定义命令”设置项和配置对话框：
+  - 左侧显示命令列表。
+  - 右侧编辑 `id`、`name`、`description`、`keywords`、`command`、`args`、`icon`、`workingDirectory`、`timeout`、`confirm`、`confirmMessage`、`detached`、`showInBestMatch`。
+  - `keywords` 和 `args` 可用“每行一个值”的文本框，比直接编辑 JSON 数组更适合普通用户。
+  - 保存前验证 `id`、`name`、`command` 非空且 `id` 唯一。
+  - 使用 `QSaveFile` 或等价方式原子写入，避免配置文件写一半导致全局搜索 provider 无法解析。
+  - 图形入口仍然读写用户级配置，不需要提权，不应写入 `/usr` 或系统级配置。
 
 ## 构建与安装验证
 
@@ -99,6 +118,7 @@ comm -23 /tmp/ukui-search.system.syms /tmp/ukui-search.new.syms
 comm -13 /tmp/ukui-search.system.syms /tmp/ukui-search.new.syms | c++filt
 
 strings <build>/libsearch/libukui-search.so.2.3.0 | rg 'Command Search|custom-commands.json'
+strings <build>/search-ukcc-plugin/libsearch-ukcc-plugin.so | rg 'Custom commands|One keyword per line|Require confirmation'
 ```
 
 可接受结果：
@@ -161,6 +181,7 @@ register search plugin:  "Command Search"
 ```bash
 rg -n 'Command%20Search|Web%20Page' "$HOME/.config/org.ukui/ukui-search/ukui-search-plugin-order.conf"
 rg -n 'empty-trash|清空回收站|gio|trash' "$HOME/.config/org.ukui/ukui-search/custom-commands.json"
+jq . "$HOME/.config/org.ukui/ukui-search/custom-commands.json" >/dev/null
 ```
 
 功能最终验证需要在图形界面中打开全局搜索，输入命令关键词，例如：
@@ -170,6 +191,13 @@ rg -n 'empty-trash|清空回收站|gio|trash' "$HOME/.config/org.ukui/ukui-searc
 ```
 
 应出现 `Command Search` 结果，点击后弹确认框；确认后执行配置中的命令。
+
+如果实现了设置页图形化入口，继续验证：
+
+- 打开“设置 -> 全局搜索”，应能看到“自定义命令”入口。
+- 点击“配置”后能看到命令列表和编辑表单。
+- 保存后 `custom-commands.json` 是格式化 JSON。
+- 使用 `$HOME/下载`、`~/Downloads` 这类参数时，全局搜索执行动作前应展开到当前用户目录。
 
 ## 回滚
 
