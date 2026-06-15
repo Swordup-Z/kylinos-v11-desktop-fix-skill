@@ -13,6 +13,7 @@
 
 - 本地源码客制化索引、DATA 分区工作区、`CUSTOMIZATION.md` 和回滚包长期保存规则：读取 [local-customization-index.md](local-customization-index.md)。
 - UKUI 全局搜索默认互联网搜索引擎源码级修改：读取 [ukui-search-web-engine.md](ukui-search-web-engine.md)。
+- UKUI 全局搜索自定义命令 provider 源码级扩展：读取 [ukui-search-command-provider.md](ukui-search-command-provider.md)。
 - UKUI 系统托盘隐藏区稳定性源码级修改：读取 [ukui-system-tray.md](ukui-system-tray.md)。
 
 后续新增源码重编译问题时，按组件或场景新增文件，例如：

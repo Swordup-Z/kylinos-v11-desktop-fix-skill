@@ -9,6 +9,7 @@
 - 通过源码级修改在设置界面新增“是否搜索应用商店应用”的正式开关。
 - 需要区分文件索引、AI 索引、本机应用索引和软件商店在线/商店结果来源。
 - 设置界面的“默认互联网搜索引擎”只提供少数固定选项，用户希望添加 Bing、Google 等搜索引擎。
+- 希望在全局搜索中出现可点击的系统动作或自定义命令，例如清空回收站。
 
 快捷键冲突、`Alt+Space` 等问题应读取 [`../../references/ukui-keybindings.md`](../../references/ukui-keybindings.md)。
 
@@ -79,6 +80,19 @@ git ls-remote --heads https://gitee.com/openkylin/ukui-search.git | rg 'openkyli
 - 当前系统包如果带有更长的发行版后缀，例如 `<version>-ok0.1k0.22`，而公开 tag 只到 `build/<version>-ok0.1` 或 `build/<version>-ok0.6`，则不能直接断言该 tag 与本机二进制包完全一致。
 
 如果只是希望临时使用不同搜索引擎，可考虑浏览器扩展或浏览器侧搜索重定向，但这不等同于在 UKUI 设置界面新增正式选项。
+
+## 自定义命令与系统动作
+
+原生全局搜索设置界面通常没有“添加自定义命令”的普通用户入口。全局搜索内部支持搜索插件和结果动作；如果希望在全局搜索里输入关键词后执行“清空回收站”等系统动作，推荐实现通用 `Command Search` provider，而不是为每个动作单独硬编码。
+
+通用设计：
+
+- provider 从 `$HOME/.config/org.ukui/ukui-search/custom-commands.json` 读取命令项。
+- 命令项用 `command` + `args` 数组描述，运行时使用 `QProcess` 直接执行，不经 shell。
+- 破坏性动作应设置 `confirm=true` 并提供 `confirmMessage`。
+- 新命令只改用户级 JSON 配置，不需要继续修改 C++ 源码。
+
+如果当前系统没有该 provider，需要源码级扩展 `libukui-search`，继续读取 [`../source-rebuild/ukui-search-command-provider.md`](../source-rebuild/ukui-search-command-provider.md)。
 
 ### 能否交给默认浏览器的默认搜索引擎
 

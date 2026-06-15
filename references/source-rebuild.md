@@ -16,6 +16,7 @@
 - 源码重编译通用流程：[`../knowledge/source-rebuild/README.md`](../knowledge/source-rebuild/README.md)
 - 本地源码客制化索引、`CUSTOMIZATION.md`、DATA 分区工作区和回滚包长期保存规则：[`../knowledge/source-rebuild/local-customization-index.md`](../knowledge/source-rebuild/local-customization-index.md)
 - UKUI 全局搜索搜索引擎修改：[`../knowledge/source-rebuild/ukui-search-web-engine.md`](../knowledge/source-rebuild/ukui-search-web-engine.md)
+- UKUI 全局搜索自定义命令 provider：[`../knowledge/source-rebuild/ukui-search-command-provider.md`](../knowledge/source-rebuild/ukui-search-command-provider.md)
 - UKUI 系统托盘隐藏区稳定性源码级修改：[`../knowledge/source-rebuild/ukui-system-tray.md`](../knowledge/source-rebuild/ukui-system-tray.md)
 
 ## 最小诊断
