@@ -275,6 +275,107 @@ pkexec mm-cli -c -a
 
 Exiting maintenance mode usually also requires another reboot. The system returns to normal mode only after that reboot. Do not leave the system in maintenance mode long-term.
 
+## Appendix: Installing AI Coding Tools
+
+This skill can be used by Codex, Claude Code, opencode, and similar AI coding tools. The commands below are common official installation entry points; check the official docs before installing.
+
+### Codex CLI
+
+Official docs:
+
+```text
+https://developers.openai.com/codex/cli
+```
+
+Common macOS/Linux install:
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
+Non-interactive install:
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
+```
+
+You can also install it with npm:
+
+```bash
+npm install -g @openai/codex
+```
+
+Verify and launch:
+
+```bash
+codex --version
+codex
+```
+
+### Claude Code
+
+Official docs:
+
+```text
+https://code.claude.com/docs/en/setup
+```
+
+Recommended macOS/Linux/WSL install:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+You can also install it with npm. This requires Node.js 18 or later:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+Verify and launch:
+
+```bash
+claude --version
+claude doctor
+claude
+```
+
+Note: the Claude Code docs advise against `sudo npm install -g` because it can cause permission and security issues. If you install through apt/dnf/apk or another system package manager on KylinOS Desktop V11, follow the maintenance-mode rules first.
+
+### opencode
+
+Official docs:
+
+```text
+https://opencode.ai/docs/
+```
+
+Common install:
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+You can also install it with npm:
+
+```bash
+npm install -g opencode-ai
+```
+
+Verify and launch:
+
+```bash
+opencode --version
+opencode
+```
+
+### KylinOS Desktop V11 Notes
+
+- If the installer writes only to the user directory, maintenance mode is usually not required.
+- If the installation writes to `/usr`, `/etc`, package repositories, system services, or uses apt/dnf/apk, run `mm-cli -s` first and proceed only in maintenance mode.
+- If the system is not in maintenance mode, enter maintenance mode and reboot before continuing with system-level installation.
+- After installation, add the global-prompt snippet from this README to the selected tool's user-level global prompt file.
+
 ## License
 
 MIT

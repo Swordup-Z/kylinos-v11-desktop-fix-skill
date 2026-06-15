@@ -275,6 +275,107 @@ pkexec mm-cli -c -a
 
 退出维护模式后通常也需要再次重启系统，重启后才会回到 normal mode。不要把系统长期留在维护模式。
 
+## 附录：安装 AI 编程工具
+
+本 skill 可以被 Codex、Claude Code、opencode 等 AI 编程工具读取。以下只记录常用官方安装入口；安装前建议以官方文档为准。
+
+### Codex CLI
+
+官方文档：
+
+```text
+https://developers.openai.com/codex/cli
+```
+
+macOS/Linux 常用安装方式：
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
+非交互安装：
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
+```
+
+也可以使用 npm：
+
+```bash
+npm install -g @openai/codex
+```
+
+验证和启动：
+
+```bash
+codex --version
+codex
+```
+
+### Claude Code
+
+官方文档：
+
+```text
+https://code.claude.com/docs/en/setup
+```
+
+macOS/Linux/WSL 推荐安装方式：
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+也可以使用 npm，要求 Node.js 18 或更高版本：
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+验证和启动：
+
+```bash
+claude --version
+claude doctor
+claude
+```
+
+注意：Claude Code 官方文档提示不要使用 `sudo npm install -g`，否则可能带来权限和安全问题。若使用 apt/dnf/apk 等系统包方式安装，在 KylinOS Desktop V11 上应先遵守维护模式规则。
+
+### opencode
+
+官方文档：
+
+```text
+https://opencode.ai/docs/
+```
+
+常用安装方式：
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+也可以使用 npm：
+
+```bash
+npm install -g opencode-ai
+```
+
+验证和启动：
+
+```bash
+opencode --version
+opencode
+```
+
+### KylinOS Desktop V11 注意事项
+
+- 如果安装方式只写入用户目录，通常不需要维护模式。
+- 如果安装方式会写 `/usr`、`/etc`、系统包源、系统服务或通过 apt/dnf/apk 安装，应先执行 `mm-cli -s` 确认维护模式。
+- 如果当前不是维护模式，应先进入维护模式并重启，再继续系统级安装。
+- 安装完成后，把本仓库 README 中的全局提示词片段加入对应工具的用户级全局提示词文件。
+
 ## 许可证
 
 MIT
