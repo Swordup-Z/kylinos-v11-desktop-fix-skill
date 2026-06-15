@@ -33,6 +33,25 @@ ukui-panel-tray-persistence
 
 不要把这类本地开发工作区放到 `$HOME`、桌面、下载目录或根分区临时目录；这样会挤占根分区，也不利于后续查找。
 
+## 已有源码仓库的更新规则
+
+如果本地客制化项目下已经存在源码仓库，后续系统包升级或需要重新匹配上游版本时，默认在现有仓库中原地更新，不删除目录、不重新完整下载：
+
+```bash
+git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" remote -v
+git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" status -sb
+git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" fetch --all --tags
+```
+
+原地更新前必须先确认工作树状态：
+
+- 如果有未提交改动，先判断是否属于当前客制化修改；需要保留时先提交本地 commit 并导出 patch，再切换或合并新基线。
+- 如果已有本地客制化 commit，不要直接 reset 或覆盖；优先基于新 tag/branch 新建分支，再用 `git am <patch>`、`git cherry-pick <local-commit>` 或人工迁移方式重放修改。
+- 如果构建目录缓存过旧，可以清理或重建 `build/`，但不应删除源码仓库、`CUSTOMIZATION.md`、`patches/` 或 `rollback/`。
+- 只有源码目录损坏、远端来源错误、历史缺失导致无法 fetch，或用户明确要求重新下载时，才新建备用目录重新 clone；不要用删除旧目录再重新下载作为默认流程。
+
+每次原地更新源码基线后，都要更新 `CUSTOMIZATION.md` 中的基线版本、当前分支或 commit、patch 套用状态、构建验证结果和回滚路径。
+
 ## 必备索引文件
 
 每个本地源码客制化目录必须创建：
@@ -127,12 +146,37 @@ git format-patch -1 HEAD --stdout > "/data/usershare/kylinos-local-sources/<comp
 ```text
 # KylinOS Local Source Customizations
 
-| Project | Component | Status | Installed files | Rollback | Notes |
-| --- | --- | --- | --- | --- | --- |
-| <component-or-fix> | <package/source> | installed | /usr/lib/... | rollback/<timestamp>/restore.sh | CUSTOMIZATION.md |
+| Project | Scenario | Source packages | Source tree | Patch dirs | Status | Index |
+| --- | --- | --- | --- | --- | --- | --- |
+| <component-or-fix> | <short-scenario> | <source-package> | <source-tree>/ | patches/<source-package>/ | installed | CUSTOMIZATION.md |
 ```
 
-每次新增、试装、回滚或迁移本地源码客制化项目时，都要同步更新全局索引和对应 `CUSTOMIZATION.md`。
+每次新增、试装、回滚、导出 patch、迁移本地源码客制化项目或确认系统包升级后的新基线时，都要同步更新全局索引和对应 `CUSTOMIZATION.md`。
+
+## 渐进式披露与映射表
+
+为了让后续维护者或 AI 工具快速查找，不要把所有细节写进全局索引。按三层组织：
+
+1. 全局索引 `/data/usershare/kylinos-local-sources/README.md`：只记录项目级路由，包括项目目录、场景、源码包名、源码树、patch 目录、状态和 `CUSTOMIZATION.md` 链接。
+2. 项目索引 `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md`：记录该项目的源码包到二进制包、patch、安装文件和回滚包映射。
+3. patch 文件和回滚包：只在需要重新套用、构建或回滚时再读取。
+
+`CUSTOMIZATION.md` 中建议增加“源码包与 patch 映射”表：
+
+```text
+| Source package | Binary packages | Base version/tag | Source tree | Patch dir | Latest local commit | Latest patch | Installed files | Rollback |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| <source-package> | <binary-package-list> | <version-or-tag> | <source-tree>/ | patches/<source-package>/ | <commit-or-none> | <patch-or-none> | /usr/lib/... | rollback/<timestamp>/restore.sh |
+```
+
+如果一个客制化项目涉及多个源码包，应在同一个项目根目录下按源码包拆分 patch 目录：
+
+```text
+patches/<source-package-a>/
+patches/<source-package-b>/
+```
+
+查找时先读全局索引，确认项目和源码包；再读对应项目的 `CUSTOMIZATION.md`，确认 patch、基线版本、安装目标和回滚包；最后才打开具体 patch 或源码文件。
 
 ## 保留与清理
 

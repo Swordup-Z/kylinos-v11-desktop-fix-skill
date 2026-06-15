@@ -97,6 +97,8 @@ mm-cli -c -a
 /data/usershare/kylinos-local-sources/<component-or-fix>/rollback/<timestamp>/
 ```
 
+如果本地源码仓库已经存在，后续升级或重新匹配源码版本时应默认原地更新该仓库，不删除目录、不重新完整 clone。先检查 `remote -v` 和 `status -sb`，再执行 `git fetch --all --tags`；如已有本地 commit 或未提交改动，先提交并导出 patch，或基于新源码节点新建分支后再 `git am`、`git cherry-pick` 或人工迁移。只有源码仓库损坏、远端来源错误、历史缺失无法 fetch，或用户明确要求时，才创建备用目录重新 clone。
+
 `CUSTOMIZATION.md` 用来保存后续继续修改所需的信息，不写进一次性聊天记录。建议记录：
 
 - 目标问题和预期行为。
@@ -123,6 +125,11 @@ git -C "/data/usershare/kylinos-local-sources/<component-or-fix>/<source-tree>" 
 ```
 
 该 commit 和 patch 只作为本地继续定制的依据；不要 push 到上游或公开远端。系统包升级后，应先判断新版本是否已经包含同类功能，再把 patch 套到新的源码节点上重新构建、重新做 ABI/RPATH/导出符号验证和回滚包准备。
+
+为了实现渐进式披露和快速查找，必须维护两级映射：
+
+- `/data/usershare/kylinos-local-sources/README.md`：项目级映射，只记录项目目录、场景、源码包、源码树、patch 目录、状态和 `CUSTOMIZATION.md`。
+- `/data/usershare/kylinos-local-sources/<component-or-fix>/CUSTOMIZATION.md`：项目内映射，记录源码包到二进制包、基线版本、patch、安装文件和回滚包的关系。
 
 如果某个本地客制化修改已经被正式安装并持续使用，应把对应回滚包长期保存。可以保留在该问题目录的 `rollback/<timestamp>/` 下，也可以按组件迁移到：
 
