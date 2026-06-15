@@ -213,14 +213,23 @@ apt-mark showhold
 
 `dpkg -V` 应无输出，相关包不应继续处于 hold 状态。
 
-进一步核查公开 Gitee 仓库时，`ukui-search` 顶层 `CMakeLists.txt` 可能没有声明包版本；可见包版本主要来自 `debian/changelog`。在一次环境中，本机安装包版本为 `<version>-ok0.1k0.22`，本机包 changelog 显示该版本修复 `#536849` 的 `com.ukui.search.qt.systemdbus` 管控风险；公开 Gitee 仓库全历史中没有完全相同的 `ok0.1k0.22` 版本号，但可在 `openkylin/nile-sp2` 历史中找到同 BUG 的源码提交，提交内容新增 `ukuisearch-systemdbus/conf/com.ukui.search.qt.systemdbus.yaml` 并安装到 `/etc/kylin-config/basic/`。本机系统中也能通过以下命令确认该文件由当前二进制包安装：
+进一步核查公开源码仓库时，不要假设顶层构建文件一定声明包版本。`ukui-search` 这类组件的可见包版本通常主要来自 `debian/changelog`，而发行版二进制包可能只在本机 `/usr/share/doc/<binary-package>/changelog.Debian.gz` 中保留完整发行版后缀。通用做法是：
+
+1. 读取当前已安装包 changelog，提取最新发行版版本、BUG 编号、Change-Id、改动描述和影响域。
+2. 在公开仓库中用这些线索反查源码提交，而不是只查 tag 名称。
+3. 对照二进制包实际安装文件，确认 changelog 中提到的文件或能力是否已经落到当前系统。
+
+示例命令：
 
 ```bash
-dpkg -L ukui-search-systemdbus | rg 'com\.ukui\.search\.qt\.systemdbus\.yaml'
-dpkg -S /etc/kylin-config/basic/com.ukui.search.qt.systemdbus.yaml
+zcat /usr/share/doc/<binary-package>/changelog.Debian.gz | sed -n '1,160p'
+git log --all --format='%h %ai %D%n%s%n' -G '<bug-id>|<change-id>|<change-description>'
+git log --all --format='%h %ai %D%n%s%n' --grep='<bug-id>|<keyword>' --extended-regexp
+dpkg -L <binary-package> | rg '<expected-file-or-feature>'
+dpkg -S <expected-system-file>
 ```
 
-这类结果说明：公开仓库可能包含发行版包中某些修复的源码提交，但不一定包含当前发行版完整包版本的 changelog 和精确补丁集合。后续如需基于公开仓库修复当前系统，应优先 cherry-pick 目标补丁并重新构建当前发行版源码包，而不是降级或整体切换到公开更高版本分支。
+如果公开仓库中能找到同一 BUG/Change-Id/改动描述对应的源码提交，只能说明公开仓库包含该修复的来源或回灌线索；不能直接说明公开分支整体就是当前系统包的精确源码。后续如需基于公开仓库修复当前系统，应优先构造“当前系统包基线 + 目标补丁”的候选源码，并通过 ABI/依赖验证收敛，而不是直接降级或整体切换到公开更高版本分支。
 
 ABI 反推时，可把缺失 C++ 导出符号作为源码版本指纹。例如系统 `ukui-search` 前端如果依赖：
 
@@ -237,16 +246,16 @@ git log --all --format='%h %ai %D%n%s%n' -G 'namespace UkuiSearch|messageOutput|
 git describe --tags --contains <commit>
 ```
 
-在一次环境中，该 ABI 指纹对应公开提交 `fix(libsearch):调用applicationInfo接口概率会导致产生core文件`，该提交位于 `build/4.21.1.0-ok0.3` 之后、`build/4.21.1.0-ok0.4` 之前。若用早于该提交的 `libukui-search.so` 替换当前系统库，当前系统前端会因为找不到 `UkuiSearch::LogUtils::messageOutput(...)` 而失败。因此，C++ API 差异可以用于排除过早源码并给出候选提交下界，但仍需要结合包 changelog、BUG 编号和其他二进制文件指纹来判断完整补丁集合。
+如果候选源码早于某个 ABI 迁移提交，替换后系统前端可能因为找不到当前系统依赖的 C++ 符号而失败。因此，C++ API 差异可以用于排除过早源码并给出候选提交下界，但仍需要结合包 changelog、BUG 编号、Change-Id 和其他二进制文件指纹来判断完整补丁集合。
 
-继续以公开 `openkylin/nile-sp2` 上包含 `#536849` 的 `fix(system-dbus): 增加dbus管控功能` 提交作为候选上界时，未修改源码可在本地完整编译。若保留后续 `fix(app-data): 修复 SQLite 锁竞争与数据库事务处理问题` 这类稳定性提交，构建出的 `libukui-search.so.2.3.0` 可能比当前系统库多导出 2 个 SQLite 辅助符号：
+候选源码可能包含当前系统尚未打包的后续稳定性修复。遇到这种情况，不要只按“符号数量不同”直接否定；先判断差异方向和影响面。若候选库相对系统库只多导出内部辅助符号，例如 SQLite 配置、日志、缓存或测试辅助类，而没有减少系统库已有公共符号，则属于“候选库是系统库导出符号的超集”的情况：
 
 ```text
-UkuiSearch::configureSqliteDatabase(QSqlDatabase&, UkuiSearch::SqliteDatabaseMode, QString*)
-UkuiSearch::defaultSqliteBusyTimeoutMs()
+system_only = 0
+candidate_only > 0
 ```
 
-这种“候选库是系统库导出符号的超集”不同于之前的缺符号风险；只要 `system_only` 为 0、`SONAME`/`NEEDED` 一致且无 `RPATH`/`RUNPATH`，可视为低于缺符号场景的 ABI 风险，但仍应先本地验证再安装：
+这种情况不同于之前的缺符号风险；只要 `system_only` 为 0、`SONAME`/`NEEDED` 一致且无 `RPATH`/`RUNPATH`，可视为低于缺符号场景的 ABI 风险。但新增符号对应的源码变更仍要阅读，确认不是大范围架构迁移、运行协议变化或引入新运行时依赖。通用验证：
 
 ```bash
 nm -D --defined-only /usr/lib/<arch>/libukui-search.so.2.3.0 | awk '{print $3}' | sort > /tmp/ukui-search.system.rawsyms
@@ -256,7 +265,7 @@ comm -13 /tmp/ukui-search.system.rawsyms /tmp/ukui-search.patched.rawsyms | c++f
 readelf -d <build>/libsearch/libukui-search.so.2.3.0 | rg 'NEEDED|SONAME|RUNPATH|RPATH|FLAGS'
 ```
 
-在该候选基线上为 Bing/Google 做最小补丁后，应验证：
+在候选基线上为 Bing/Google 做最小补丁后，应验证：
 
 ```bash
 strings <build>/libsearch/libukui-search.so.2.3.0 | rg 'www\.bing\.com|www\.google\.com|bing|google'
