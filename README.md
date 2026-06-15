@@ -174,7 +174,7 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 | UKUI 开机自启动 | [`references/ukui-autostart.md`](references/ukui-autostart.md) | [`knowledge/ukui/autostart.md`](knowledge/ukui/autostart.md) |
 | UKUI 全局快捷键 | [`references/ukui-keybindings.md`](references/ukui-keybindings.md) | [`knowledge/ukui/keybindings.md`](knowledge/ukui/keybindings.md) |
 | UKUI 全局搜索 | [`references/ukui-search.md`](references/ukui-search.md) | [`knowledge/ukui/search.md`](knowledge/ukui/search.md) |
-| 源码重编译类修复 | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md)、[`knowledge/source-rebuild/local-customization-index.md`](knowledge/source-rebuild/local-customization-index.md)、[`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md) |
+| 源码重编译类修复 | [`references/source-rebuild.md`](references/source-rebuild.md) | [`knowledge/source-rebuild/README.md`](knowledge/source-rebuild/README.md)、[`knowledge/source-rebuild/local-customization-index.md`](knowledge/source-rebuild/local-customization-index.md)、[`knowledge/source-rebuild/ukui-search-web-engine.md`](knowledge/source-rebuild/ukui-search-web-engine.md)、[`knowledge/source-rebuild/ukui-system-tray.md`](knowledge/source-rebuild/ukui-system-tray.md) |
 | UKUI 右侧托盘 | [`references/ukui-system-tray.md`](references/ukui-system-tray.md) | [`knowledge/ukui/system-tray.md`](knowledge/ukui/system-tray.md) |
 | UKUI 系统服务管理器 | [`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md) | [`knowledge/ukui/system-service-manager.md`](knowledge/ukui/system-service-manager.md) |
 | AI 子系统清理 | [`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md) | [`knowledge/ukui/kylin-ai-subsystem.md`](knowledge/ukui/kylin-ai-subsystem.md) |
@@ -244,7 +244,7 @@ README 同时介绍 `references/` 和 `knowledge/`：前者是入口和索引，
 - UKUI 全局快捷键冲突、设置界面提示快捷键被系统占用、全局搜索快捷键、`Alt+Space` 与窗口菜单冲突：[`references/ukui-keybindings.md`](references/ukui-keybindings.md)
 - UKUI 全局搜索结果来源、应用商店未安装应用结果、软件商店搜索 D-Bus 插件屏蔽与回滚：[`references/ukui-search.md`](references/ukui-search.md)
 - UKUI 全局搜索默认互联网搜索引擎写死、需要通过源码级修改添加 Bing/Google 或应用商店结果开关等选项时的源码匹配、构建、ABI 风险评估和本地客制化源码索引：[`references/source-rebuild.md`](references/source-rebuild.md)
-- UKUI 右侧托盘小图标顺序和隐藏区不持久、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
+- UKUI 右侧托盘小图标顺序和隐藏区不持久、主显示区应用退出后隐藏项自动补位、`systemTray.json`、`orderedItems`、`separateIndex`：[`references/ukui-system-tray.md`](references/ukui-system-tray.md)
 - `ukui-system-service-manager.service` 反复 timeout、`QDBusError("", "")`、`org.ukui.serviceManager` 被孤儿进程占用、启动顺序竞态导致的面板/任务栏异常、D-Bus activation 持久化修复：[`references/ukui-system-service-manager.md`](references/ukui-system-service-manager.md)
 - 任务栏/托盘 AI 助手、AI 子系统、Kaiming AI 助手卸载边界和残留清理：[`references/kylin-ai-subsystem.md`](references/kylin-ai-subsystem.md)
 

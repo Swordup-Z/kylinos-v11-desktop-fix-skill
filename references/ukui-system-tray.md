@@ -8,11 +8,13 @@
 
 - 托盘图标顺序重启后不保留。
 - 截图、剪切板等图标隐藏状态不持久。
+- 主显示区应用退出后，隐藏区图标自动补位到主托盘。
 - 需要调整 `systemTray.json`、`orderedItems`、`separateIndex`。
 
 ## 先读知识章节
 
 - UKUI 系统托盘具体诊断和修复：[`../knowledge/ukui/system-tray.md`](../knowledge/ukui/system-tray.md)
+- 如果配置级方案无法满足固定隐藏区行为，再读取源码级修改章节：[`../knowledge/source-rebuild/ukui-system-tray.md`](../knowledge/source-rebuild/ukui-system-tray.md)
 
 ## 最小诊断
 
