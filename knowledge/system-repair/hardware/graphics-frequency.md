@@ -151,9 +151,7 @@ sudo kill <ukui-powermanagement-service-pid>
 sudo /usr/bin/ukui-powermanagement-service
 ```
 
-如果没有 UKUI 电源管理覆盖，或目标系统没有等价的电源策略后端，才考虑使用 systemd oneshot 作为兜底。示例中必须把设备名替换成实际节点：
-
-若用户描述为“鼠标跟手，但窗口拖动、托盘、菜单或动画看起来掉帧”，而 CPU 频率下限已经较高，优先做 `devfreq` A/B 验证。掉帧时常见状态是 GPU 或显示总线相关节点处于最低档，例如 `cur_freq` 等于 `min_freq`，且 governor 为 `simple_ondemand`。将相关节点临时切到 `performance` 后若立即流畅，说明问题更接近 GPU/显示总线动态调频策略，不应继续盲目提高 CPU 频率下限。
+若用户描述为“鼠标跟手，但窗口拖动、托盘、菜单或动画看起来掉帧”，而 CPU 频率下限已经较高，优先做 `devfreq` A/B 验证。掉帧时常见状态是 GPU 或显示总线相关节点处于最低档，例如 `cur_freq` 等于 `min_freq`，且 governor 为 `simple_ondemand`。将相关节点临时切到较高档后若立即流畅，说明问题更接近 GPU/显示总线动态调频策略，不应继续盲目提高 CPU 频率下限。
 
 ```bash
 for d in /sys/class/devfreq/*; do
@@ -167,30 +165,55 @@ for d in /sys/class/devfreq/*; do
 done
 ```
 
-运行时 A/B：
+运行时 A/B 先不要直接固定最高档。优先保留 `simple_ondemand` 动态调频，只抬高 `min_freq` 下限；从较低下限开始测试，如果仍掉帧，再逐档提高。示例频率必须替换成当前设备 `available_frequencies` 中存在的值：
 
 ```bash
-for d in /sys/class/devfreq/*; do
-  if grep -qw performance "$d/available_governors"; then
-    echo performance | sudo tee "$d/governor"
-  fi
-done
+echo <gpu-floor-freq> | sudo tee /sys/class/devfreq/<gpu-dev>/min_freq
+echo simple_ondemand | sudo tee /sys/class/devfreq/<gpu-dev>/governor
+echo <bus-floor-freq> | sudo tee /sys/class/devfreq/<bus-dev>/min_freq
+echo simple_ondemand | sudo tee /sys/class/devfreq/<bus-dev>/governor
 ```
 
-如果 `/usr/share/ukui/ukui-power-manager/upm-hardware-global.conf` 的 `[devfreqPolicy]` 已配置为 `performance`，但切换 UKUI 电源模式后 `/sys/class/devfreq/*/governor` 仍保持 `simple_ondemand` 或 `powersave`，说明当前版本电源后端没有把策略实际下发到这些节点。此时不再反复修改 CPU 或同一配置值；可以把“遍历所有支持 `performance` 的 devfreq 节点并设置 governor”的服务作为硬件策略兜底，并在说明中标注功耗取舍。
+如果低一档仍有掉帧，不要立刻回到固定 `performance`；继续提高最低频率下限，直到找到“够流畅但仍可动态调频”的最低可接受档位。只有在所有合理下限都无法解决、或硬件驱动动态调频本身会触发错误时，才考虑固定 `performance`。
 
-推荐兜底脚本使用通用遍历，不写死设备名：
+如果 `/usr/share/ukui/ukui-power-manager/upm-hardware-global.conf` 已配置了期望策略，但切换 UKUI 电源模式后 `/sys/class/devfreq/*` 没有按预期变化，说明当前版本电源后端没有把策略实际下发到这些节点。此时不再反复修改 CPU 或同一配置值；可以使用 systemd oneshot 在开机和唤醒后应用“动态调频 + 最低频率下限”的硬件策略兜底，并在说明中标注功耗取舍。
+
+推荐兜底脚本使用通用遍历，不写死设备名。百分比需要根据现场 A/B 结果调整；例如普通 GPU/总线节点默认取 75% 下限，显示总线类节点可取 80% 下限：
 
 ```sh
 #!/bin/sh
 set -eu
 
+pick_floor_freq() {
+  dev="$1"
+  percent="$2"
+  max_freq="$(cat "$dev/max_freq" 2>/dev/null || true)"
+  avail="$(cat "$dev/available_frequencies" 2>/dev/null || true)"
+  case "$max_freq" in ''|*[!0-9]*) return 1 ;; esac
+  target=$((max_freq * percent / 100))
+  chosen=""
+  for freq in $avail; do
+    case "$freq" in ''|*[!0-9]*) continue ;; esac
+    if [ "$freq" -ge "$target" ] && { [ -z "$chosen" ] || [ "$freq" -lt "$chosen" ]; }; then
+      chosen="$freq"
+    fi
+  done
+  printf '%s\n' "${chosen:-$target}"
+}
+
 for dev in /sys/class/devfreq/*; do
   [ -d "$dev" ] || continue
   [ -r "$dev/available_governors" ] || continue
   [ -w "$dev/governor" ] || continue
-  if grep -qw performance "$dev/available_governors"; then
-    echo performance > "$dev/governor"
+  percent=75
+  name="$(cat "$dev/name" 2>/dev/null || basename "$dev")"
+  case "$name" in nocfreq) percent=80 ;; esac
+  if [ -w "$dev/min_freq" ]; then
+    floor_freq="$(pick_floor_freq "$dev" "$percent" 2>/dev/null || true)"
+    [ -n "$floor_freq" ] && echo "$floor_freq" > "$dev/min_freq"
+  fi
+  if grep -qw simple_ondemand "$dev/available_governors"; then
+    echo simple_ondemand > "$dev/governor"
   fi
 done
 ```
@@ -199,7 +222,7 @@ done
 
 ```ini
 [Unit]
-Description=Pin devfreq governors to performance
+Description=Apply smooth desktop devfreq policy without pinning max frequency
 DefaultDependencies=no
 After=sysinit.target systemd-udev-settle.service
 Before=graphical.target
@@ -226,16 +249,20 @@ sudo systemctl enable --now <service-name>.service
 ```bash
 for d in /sys/class/devfreq/*; do
   echo "== $d =="
+  cat "$d/name" 2>/dev/null || true
   cat "$d/governor" 2>/dev/null || true
   cat "$d/cur_freq" 2>/dev/null || true
+  cat "$d/min_freq" 2>/dev/null || true
+  cat "$d/max_freq" 2>/dev/null || true
 done
 systemctl status <service-name>.service --no-pager
 ```
 
 风险和取舍：
 
-- `performance` 通常会增加功耗和发热，笔记本可能影响续航。
-- 这是稳定性优先的规避策略，不等同于修复驱动本身的 bug。
+- 提高 `min_freq` 会增加一定功耗，但通常比固定 `performance` 更省电。
+- 固定 `performance` 通常会明显增加功耗和发热，笔记本可能影响续航；除非 A/B 验证下限策略不够用，否则不应作为首选。
+- 这是体验优先的硬件策略兜底，不等同于修复驱动或 UKUI 电源后端本身的 bug。
 - 如果后续厂商内核或驱动更新修复了 DVFS，可评估恢复默认 governor。
 - 如果改了 UKUI 电源管理配置，应保留 `.bak-<date>` 备份；回滚时恢复原文件，重启 `ukui-powermanagement-service` 或重启系统。
 
