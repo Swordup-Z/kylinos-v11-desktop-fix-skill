@@ -153,18 +153,61 @@ sudo /usr/bin/ukui-powermanagement-service
 
 如果没有 UKUI 电源管理覆盖，或目标系统没有等价的电源策略后端，才考虑使用 systemd oneshot 作为兜底。示例中必须把设备名替换成实际节点：
 
+若用户描述为“鼠标跟手，但窗口拖动、托盘、菜单或动画看起来掉帧”，而 CPU 频率下限已经较高，优先做 `devfreq` A/B 验证。掉帧时常见状态是 GPU 或显示总线相关节点处于最低档，例如 `cur_freq` 等于 `min_freq`，且 governor 为 `simple_ondemand`。将相关节点临时切到 `performance` 后若立即流畅，说明问题更接近 GPU/显示总线动态调频策略，不应继续盲目提高 CPU 频率下限。
+
+```bash
+for d in /sys/class/devfreq/*; do
+  echo "== $d =="
+  cat "$d/name" 2>/dev/null || true
+  cat "$d/governor" 2>/dev/null || true
+  cat "$d/cur_freq" 2>/dev/null || true
+  cat "$d/min_freq" 2>/dev/null || true
+  cat "$d/max_freq" 2>/dev/null || true
+  cat "$d/available_governors" 2>/dev/null || true
+done
+```
+
+运行时 A/B：
+
+```bash
+for d in /sys/class/devfreq/*; do
+  if grep -qw performance "$d/available_governors"; then
+    echo performance | sudo tee "$d/governor"
+  fi
+done
+```
+
+如果 `/usr/share/ukui/ukui-power-manager/upm-hardware-global.conf` 的 `[devfreqPolicy]` 已配置为 `performance`，但切换 UKUI 电源模式后 `/sys/class/devfreq/*/governor` 仍保持 `simple_ondemand` 或 `powersave`，说明当前版本电源后端没有把策略实际下发到这些节点。此时不再反复修改 CPU 或同一配置值；可以把“遍历所有支持 `performance` 的 devfreq 节点并设置 governor”的服务作为硬件策略兜底，并在说明中标注功耗取舍。
+
+推荐兜底脚本使用通用遍历，不写死设备名：
+
+```sh
+#!/bin/sh
+set -eu
+
+for dev in /sys/class/devfreq/*; do
+  [ -d "$dev" ] || continue
+  [ -r "$dev/available_governors" ] || continue
+  [ -w "$dev/governor" ] || continue
+  if grep -qw performance "$dev/available_governors"; then
+    echo performance > "$dev/governor"
+  fi
+done
+```
+
+将脚本安装到 `/usr/local/sbin/<name>`，再用 systemd oneshot 在图形会话前应用。若问题与合盖、休眠或唤醒后重新掉帧有关，可额外安装 `/lib/systemd/system-sleep/<name>`，只在 `post/*` 阶段重新执行同一脚本。
+
 ```ini
 [Unit]
-Description=Pin GPU devfreq governor to performance
+Description=Pin devfreq governors to performance
 DefaultDependencies=no
-After=sysinit.target
+After=sysinit.target systemd-udev-settle.service
 Before=graphical.target
-ConditionPathExists=/sys/class/devfreq/<devfreq-device>/governor
+ConditionDirectoryNotEmpty=/sys/class/devfreq
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
-ExecStart=/bin/sh -c 'echo performance > /sys/class/devfreq/<devfreq-device>/governor'
+ExecStart=/usr/local/sbin/<name>
 
 [Install]
 WantedBy=graphical.target
@@ -181,8 +224,11 @@ sudo systemctl enable --now <service-name>.service
 验证：
 
 ```bash
-cat /sys/class/devfreq/<devfreq-device>/governor
-cat /sys/class/devfreq/<devfreq-device>/cur_freq
+for d in /sys/class/devfreq/*; do
+  echo "== $d =="
+  cat "$d/governor" 2>/dev/null || true
+  cat "$d/cur_freq" 2>/dev/null || true
+done
 systemctl status <service-name>.service --no-pager
 ```
 
