@@ -7,7 +7,7 @@
 
 ## 知识入口
 
-进入 AI 工具边界索引后，按“权限配置异常”或“系统修复提权边界”选择具体知识；不要把工具配置经验和系统修复流程同时读入上下文。
+AI 工具进入边界索引后，按“权限配置异常”或“系统修复提权边界”选择具体知识；不要把工具配置经验和系统修复流程同时读入上下文。
 
 - [`../../knowledge/system-repair/agent-tools/README.md`](../../knowledge/system-repair/agent-tools/README.md)
 

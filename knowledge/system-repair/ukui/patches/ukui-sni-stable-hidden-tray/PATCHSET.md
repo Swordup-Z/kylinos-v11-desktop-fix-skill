@@ -19,7 +19,7 @@
 - 基线节点：tag `build/4.21.0.2-ok0.1`，commit `3b2b1a6abaf2f1d5b083060b56bbfe69c04bad15`
 - 本地功能分支：`codex/stable-hidden-tray`
 - patch 文件：`ukui-sni-stable-hidden-tray.patch`
-- 验证状态：`installed-pending-runtime-verification`
+- 验证状态：`runtime-verified`
 
 ## 套用策略
 

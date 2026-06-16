@@ -8,7 +8,7 @@
 
 ## 知识入口
 
-进入 AI 工具配置索引后，按 Codex 本地配置或多工具全局提示词选择具体知识。
+AI 工具进入配置索引后，按 Codex 本地配置或多工具全局提示词选择具体知识。
 
 - [`../../knowledge/feature-enhancement/agent-tools/README.md`](../../knowledge/feature-enhancement/agent-tools/README.md)
 

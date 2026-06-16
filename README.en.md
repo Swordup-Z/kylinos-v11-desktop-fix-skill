@@ -176,6 +176,7 @@ SKILL.md
 
 - UKUI global-search search-engine customization.
 - UKUI global-search custom command provider and graphical command configuration.
+- UKUI system-tray input-method status badges and similar desktop interaction enhancements.
 - Local source customization workspaces, commits, patches, and build-artifact cleanup.
 - Reusable source patch sets, upstream repositories, base nodes, and conflict migration rules.
 - AI-tool global prompts, permission configuration, and multi-tool loading rules.

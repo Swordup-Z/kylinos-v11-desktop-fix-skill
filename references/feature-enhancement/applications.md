@@ -7,7 +7,7 @@
 
 ## 知识入口
 
-进入应用体验索引后，先确认是否已有独立增强章节；没有独立增强章节时，只在实际依赖安装或隔离边界时复用修复知识。
+AI 工具进入应用体验索引后，先确认是否已有独立增强章节。没有独立增强章节时，从用户问题中识别实际依赖的应用场景，再选择最小修复知识，例如宿主机安装、AppImage、桌面入口图标、第三方 apt 源或 KARE/Kaiming 隔离边界。
 
 - [`../../knowledge/feature-enhancement/applications/README.md`](../../knowledge/feature-enhancement/applications/README.md)
 
