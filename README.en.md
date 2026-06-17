@@ -4,7 +4,7 @@
 
 This repository is a structured knowledge base for KylinOS Desktop V11. It records reusable workflows for desktop-system repair and feature enhancement. It is not an executable program. Humans can browse the directories directly, and AI tools can start from `SKILL.md` and progressively load only the relevant references.
 
-It currently covers UKUI, KARE/Kaiming, Clash Verge TUN, application installation, autostart, global search, system tray behavior, input methods, system services, maintenance mode, the PanShi architecture, fingerprint and graphics hardware, storage layout, local source customizations, and AI-tool configuration.
+It currently covers UKUI, KARE/Kaiming, Clash Verge TUN, application installation, aTrust/UEM security clients, autostart, global search, system tray behavior, input methods, system services, maintenance mode, the PanShi architecture, fingerprint and graphics hardware, storage layout, local source customizations, and AI-tool configuration.
 
 ## Installation
 
@@ -165,7 +165,7 @@ SKILL.md
 ### System Repair
 
 - Maintenance mode, the PanShi architecture, and system-level modification boundaries.
-- Application installation, AppImage, third-party apt sources, and KARE/Kaiming isolation.
+- Application installation, AppImage, third-party apt sources, KARE/Kaiming isolation, and aTrust/UEM security-client components.
 - Clash Verge TUN, `/dev/net/tun`, proxy services, and proxy core paths.
 - UKUI autostart, global-search issues, shortcuts, system tray, input methods, panel/taskbar behavior, and open-with file-dialog behavior.
 - Desktop AI components, AI subsystem cleanup, and residues.

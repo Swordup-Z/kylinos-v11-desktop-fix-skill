@@ -1,0 +1,69 @@
+# aTrust/UEM 安全客户端修复
+
+## 适用场景
+
+- aTrust 或类似 VPN/安全客户端安装后提示虚拟网络组件、剪切板隔离组件、UEM 组件启动失败。
+- 安装脚本尝试编译或安装第三方内核模块，例如 `sfuem.ko`。
+- 第三方内核模块、DKMS、`modules-load.d` 或临时安装脚本残留导致系统启动异常。
+
+## 处理原则
+
+- 不要把“内核模块能编译成功”等同于“可以安全开机自加载”。第三方安全客户端的内核模块会影响网络栈、LSM、安全隔离或早期启动路径，必须按高风险系统改动处理。
+- 未获得官方明确支持当前内核版本的模块前，不要强行修补源码、伪造兼容对象、加入 DKMS 或写入 `modules-load.d` 持久加载。
+- 若确实需要验证内核模块，只能在维护模式下先准备回滚方案，再在当前会话中手动加载和卸载验证；跨重启自动加载必须等用户确认功能和重启稳定性后再考虑。
+- 一旦自编或强行适配的第三方模块造成启动异常，优先回滚内核侧改动，保留主程序服务，再另找用户态、官方包、官方驱动或版本匹配方案。
+
+## 最小诊断
+
+```bash
+mm-cli -s
+dpkg -l | rg -i 'atrust|sangfor|uem' || true
+systemctl status aTrustDaemon.service --no-pager 2>/dev/null || true
+systemctl status uem_service.service --no-pager 2>/dev/null || true
+lsmod | rg -i 'sfuem|sangfor|uem' || true
+find /lib/modules /usr/lib/modules -name 'sfuem.ko*' 2>/dev/null
+rg -n 'sfuem|uem_service' /etc/modules-load.d /usr/lib/modules-load.d /lib/modules-load.d /etc/modprobe.d /usr/lib/modprobe.d 2>/dev/null || true
+```
+
+如果用户报告启动异常，应先确认模块是否仍在磁盘、DKMS 或自加载配置中；不要先重装客户端。
+
+## 回滚内核侧残留
+
+在维护模式下执行，目标是移除高风险内核残留，同时尽量保留 aTrust 主程序用于后续诊断：
+
+```bash
+sudo systemctl disable --now uem_service.service 2>/dev/null || true
+sudo systemctl mask uem_service.service 2>/dev/null || true
+sudo dkms remove sfuem/1.0.0 --all 2>/dev/null || true
+sudo find /lib/modules /usr/lib/modules -name 'sfuem.ko*' -delete
+sudo rm -f /etc/modules-load.d/*sfuem* /usr/lib/modules-load.d/*sfuem* /lib/modules-load.d/*sfuem*
+sudo depmod -a
+```
+
+验证：
+
+```bash
+lsmod | rg -i 'sfuem|uem' || true
+find /lib/modules /usr/lib/modules -name 'sfuem.ko*' 2>/dev/null
+systemctl is-enabled uem_service.service 2>/dev/null || true
+systemctl is-active uem_service.service 2>/dev/null || true
+systemctl is-active aTrustDaemon.service 2>/dev/null || true
+```
+
+期望状态：`sfuem` 不在 `lsmod`，磁盘无 `sfuem.ko*`，`uem_service` 为 `masked` 或 `disabled/inactive`，`aTrustDaemon` 可继续保持 `active` 便于后续排查。
+
+## 临时脚本清理
+
+排查过程中生成在 `$HOME` 的一次性脚本、wrapper 或编译辅助文件，在确认不再需要回滚后应删除，避免后续误执行：
+
+```bash
+find "$HOME" -maxdepth 1 -type f \( -name '*atrust*' -o -name '*aTrust*' -o -name '*sfuem*' \) -printf '%f\n'
+```
+
+只删除能确认属于本次临时修复链路的文件；不要按扩展名批量删除用户自己的脚本。
+
+## 后续排查方向
+
+- 优先查找官方支持当前系统和内核版本的 aTrust 包、UEM 组件或虚拟网络组件。
+- 检查 aTrust 用户态日志，判断失败是否来自主程序、`aTrustDaemon`、`aTrustXtunnel`、UEM 服务或内核模块加载。
+- 如果功能必须依赖官方 UEM 内核模块，而当前内核无匹配版本，应向用户说明这是厂商兼容性问题；不要继续用自编模块硬适配。
