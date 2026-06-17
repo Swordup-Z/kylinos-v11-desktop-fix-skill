@@ -124,6 +124,51 @@ Layout=
 fcitx5 -d
 ```
 
+## 搜狗 CPIS 面板启动崩溃
+
+如果 `fcitx5-remote -n` 已经显示搜狗输入法，但仍不能输入中文，或右下角搜狗状态面板异常，继续检查搜狗/CPIS 的 D-Bus activation。不要只反复修改 Fcitx5 profile。
+
+```bash
+ps -ef | rg -i 'fcitx5|cpis-panel|cpis-engine|ISE_NODE|cpis-uinput|sogou' | rg -v rg
+journalctl --user -b --since '10 minutes ago' --no-pager | rg -i 'com.cpis.panel|sogou|fcitx|status 11|segfault|failed'
+tail -n 120 "/tmp/com.cpis.panel.$USER.log" 2>/dev/null
+sed -n '65,85p' /opt/apps/com.cpis/etc/isp.ini
+```
+
+典型异常是 session D-Bus 反复提示：
+
+```text
+Activated service 'com.cpis.panel' failed: Process com.cpis.panel exited with status 11
+```
+
+同时 `/tmp/com.cpis.panel.$USER.log` 中出现：
+
+```text
+ui config platform path is error
+catch [Segmentation fault] signal
+```
+
+此时优先检查 `/opt/apps/com.cpis/etc/isp.ini` 的 `[platform]` 段。该全局配置应使用 CPIS 面板实际读取的 `path=` 键，例如：
+
+```ini
+[platform]
+path=/opt/apps/com.cpis/lib/aarch64-linux-gnu/libcpis-ui-platform-gtk3.so
+```
+
+不要把该段改成只有 `default=`、`x11=`、`wayland=` 等键；部分 CPIS 面板版本不会读取这些键，会直接判定 platform path 错误并崩溃。
+
+修改 `/opt/apps` 属于系统级修复，必须先确认维护模式。修复后触发 D-Bus 重新拉起或重启 Fcitx5：
+
+```bash
+mm-cli -s
+fcitx5-remote -s com.sogou.ime.ng.fcitx5.kylin
+fcitx5-remote -o
+ps -ef | rg -i 'cpis-panel|cpis-engine|ISE_NODE' | rg -v rg
+journalctl --user -b --since '2 minutes ago' --no-pager | rg -i 'com.cpis.panel|status 11|segfault|Successfully activated'
+```
+
+若 `cpis-panel-service`、`cpis-engine-service`、`ISE_NODE` 都保持运行，且日志中出现 `Successfully activated service 'com.cpis.panel'`，说明搜狗 CPIS 面板已恢复。再让用户在实际应用中测试中文输入。
+
 ## 验证
 
 ```bash
