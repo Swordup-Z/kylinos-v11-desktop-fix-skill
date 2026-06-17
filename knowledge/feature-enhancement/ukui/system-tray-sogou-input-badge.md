@@ -60,6 +60,19 @@ ldd <build>/ukui-system-tray/libukui-system-tray.so | rg 'not found' || true
 3. 按搜狗内部中英切换键，确认英文状态显示“英”。
 4. 观察 `journalctl --user` 中是否有 `ukui-panel`、QML 或 D-Bus 相关错误。
 
+## 持久化边界
+
+该功能修改的是 `ukui-widget-system-tray` 管理的系统插件和 QML 文件。普通手动替换可以跨重启生效，但不能防止后续包重装、包升级或系统修复把文件覆盖回官方版本。若用户要求“重装/升级后仍保留角标”，应对安装目标建立 `dpkg-divert` 本地转移：官方文件放到 `<target>.distrib`，定制文件保留在 `<target>`。
+
+验证：
+
+```bash
+dpkg-divert --list | rg 'ukui-system-tray|org.ukui.systemTray|TrayIcon|TrayView|FoldArea'
+dpkg -V ukui-widget-system-tray
+```
+
+`dpkg -V` 在 diversion 正确时不应把这些原路径报成包校验异常；因为包管理器视角中的官方文件已经转移到 `.distrib`。后续系统包升级后，应检查 `.distrib` 是否变化，并判断是否需要基于新官方版本重新合并 patch。
+
 ## 回滚
 
 手动替换系统插件前必须准备 `system-backup/`、`staged/`、`SHA256SUMS` 和同目录 `restore.sh`。如出现面板崩溃、托盘缺失或 QML 加载错误，执行回滚脚本并重启面板。

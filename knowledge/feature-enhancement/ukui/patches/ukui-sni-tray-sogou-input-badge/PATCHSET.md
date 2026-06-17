@@ -65,6 +65,15 @@ git am <path-to>/0001-Add-Sogou-input-mode-tray-badge.patch
 
 不同架构下插件库路径中的 multiarch 目录可能不同，应以 `dpkg -L ukui-widget-system-tray` 为准。
 
+如果现场使用手动替换而不是重新打包安装 `.deb`，且要求包重装/升级后继续保留该功能，应为上述安装目标建立 `dpkg-divert` 本地转移：
+
+```bash
+dpkg-divert --local --rename --add --divert <target>.distrib <target>
+install -m 0644 <custom-file> <target>
+```
+
+建立 diversion 前先确保 `<target>` 是官方文件，这样 `.distrib` 保存的是包管理器应维护的官方版本；随后再把定制文件安装回 `<target>`。撤销时先恢复官方文件，再 `dpkg-divert --rename --remove --divert <target>.distrib <target>`。
+
 ## 构建与验证
 
 安装前至少验证：
