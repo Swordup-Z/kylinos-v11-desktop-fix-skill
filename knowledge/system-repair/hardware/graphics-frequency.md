@@ -99,6 +99,14 @@ pkexec sed -i.bak-<date> \
 
 修改后重启或重新激活 `ukui-powermanagement-service`，再验证 CPU 最低/最高频率。注意：设置界面显示的电源模式仍可能是“平衡”档；它表示高层策略档位，不等于底层 CPU/GPU governor 必须是省电策略。
 
+如果已经修改配置文件，但日志仍显示旧值，例如 `idlelowloadBalanceCpuMaxFreq` 仍是 `min`，优先怀疑运行中的 `ukui-powermanagement-service` 缓存了旧配置。先确认真实进程，再用完整命令行匹配重启，避免 `pgrep -x` 因进程名超过 15 字符而匹配失败：
+
+```bash
+pgrep -af '^/usr/bin/ukui-powermanagement-service$'
+sudo kill $(pgrep -f '^/usr/bin/ukui-powermanagement-service$')
+sudo /usr/bin/ukui-powermanagement-service
+```
+
 先确认设备节点和可用 governor：
 
 ```bash
@@ -135,7 +143,7 @@ sudo sed -i.bak-<date> -e '/^\[devfreqPolicy\]/,/^\[/ s/^\([^#][^=]*DevfreqPolic
 extend config path: "/usr/share/ukui/ukui-power-manager/upm-hardware-extend.d/<vendor>.config"
 ```
 
-还要检查该扩展文件是否包含 `DevfreqPolicy`、GPU 频率或功耗相关覆盖项。只有确认扩展文件没有覆盖，或已经按同样原则调整后，再验证。
+还要检查该扩展文件是否包含 `DevfreqPolicy`、GPU 频率或功耗相关覆盖项。只有确认扩展文件没有覆盖，或已经按同样原则调整后，再验证。部分长城/飞腾设备会加载 `upm-hardware-extend.d/GreatWall.config`，该文件可能只包含背光或首启休眠策略；若没有频率相关键，不需要修改扩展文件。
 
 运行中的 `ukui-powermanagement-service` 可能缓存旧配置。可在评估影响后重启该 DBus 后端，或要求用户重启后验证。若选择当前会话重启，先确认服务由 D-Bus 激活：
 
@@ -177,6 +185,10 @@ echo simple_ondemand | sudo tee /sys/class/devfreq/<bus-dev>/governor
 如果低一档仍有掉帧，不要立刻回到固定 `performance`；继续提高最低频率下限，直到找到“够流畅但仍可动态调频”的最低可接受档位。只有在所有合理下限都无法解决、或硬件驱动动态调频本身会触发错误时，才考虑固定 `performance`。
 
 如果 `/usr/share/ukui/ukui-power-manager/upm-hardware-global.conf` 已配置了期望策略，但切换 UKUI 电源模式后 `/sys/class/devfreq/*` 没有按预期变化，说明当前版本电源后端没有把策略实际下发到这些节点。此时不再反复修改 CPU 或同一配置值；可以使用 systemd oneshot 在开机和唤醒后应用“动态调频 + 最低频率下限”的硬件策略兜底，并在说明中标注功耗取舍。
+
+飞腾 `PHYT0048:00` GPU 与 `nocfreq` 总线的常见掉帧现场是：CPU 频率已经在合理区间，但 `PHYT0048:00` 仍停在 `200000` 或 `400000`，`nocfreq` 停在 `600000` 或 `650000`。可先把 GPU 下限试到 `600000`，`nocfreq` 下限试到 `1450000`，并保持 `simple_ondemand`；如果拖动窗口和菜单动画明显改善，再做持久化。若内核日志同时出现 `ftg340` GPU hang 自动恢复，更支持先从 devfreq 策略排查。
+
+排查卡顿时也要区分一次性 IO 噪声。例如 `com.kylin.systembackup` 或 `systembackup-daemon` 可能在短时间内执行大量 `rsync`，日志里会出现持续拷贝用户目录的进度。若守护进程当前 CPU/IO 已空闲，不要直接禁用备份服务；先把它作为短时干扰记录，再继续验证电源和 devfreq 状态。
 
 推荐兜底脚本使用通用遍历，不写死设备名。百分比需要根据现场 A/B 结果调整；例如普通 GPU/总线节点默认取 75% 下限，显示总线类节点可取 80% 下限：
 
