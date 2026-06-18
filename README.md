@@ -6,7 +6,70 @@
 
 当前内容覆盖 UKUI、KARE/Kaiming、Clash Verge TUN、应用安装、aTrust/UEM 安全客户端、开机自启动、全局搜索、托盘、输入法、系统服务、维护模式、磐石架构、指纹/图形硬件、分区挂载、本地源码客制化和 AI 工具配置等场景。
 
-## 安装方式
+## 先安装一个 AI 编程工具
+
+如果还没有可用的 AI 编程工具，先安装 Codex、Claude Code 或 opencode 之一。下面命令适用于 Linux/macOS 终端；其他系统或更多安装方式见对应官方文档。
+
+### Codex
+
+官方文档：
+
+- Codex CLI：https://developers.openai.com/codex/cli
+- Codex 快速开始：https://developers.openai.com/codex/quickstart
+
+推荐安装命令：
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
+安装后启动：
+
+```bash
+codex
+```
+
+### Claude Code
+
+官方文档：
+
+- Claude Code 快速开始：https://docs.anthropic.com/en/docs/claude-code/quickstart
+- Claude Code 设置：https://docs.anthropic.com/en/docs/claude-code/setup
+
+推荐安装命令：
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+安装后启动：
+
+```bash
+claude
+```
+
+### opencode
+
+官方文档：
+
+- opencode 文档：https://opencode.ai/docs/
+- opencode 下载：https://opencode.ai/download
+
+推荐安装命令：
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+安装后启动：
+
+```bash
+opencode
+```
+
+如果系统策略不允许 `curl | sh` 或 `curl | bash`，打开上面的官方页面，按当前系统选择独立安装包、Homebrew、npm 或其他受信任的安装方式。
+
+## 安装本经验库
 
 ### 方式一：让 AI 工具安装
 

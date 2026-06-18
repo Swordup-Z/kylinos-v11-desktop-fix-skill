@@ -6,7 +6,70 @@ This repository is a structured knowledge base for KylinOS Desktop V11. It recor
 
 It currently covers UKUI, KARE/Kaiming, Clash Verge TUN, application installation, aTrust/UEM security clients, autostart, global search, system tray behavior, input methods, system services, maintenance mode, the PanShi architecture, fingerprint and graphics hardware, storage layout, local source customizations, and AI-tool configuration.
 
-## Installation
+## Install an AI Coding Tool First
+
+If you do not already have an AI coding tool, install one of Codex, Claude Code, or opencode first. The commands below target Linux/macOS terminals. For other systems or installation methods, use the linked official docs.
+
+### Codex
+
+Official docs:
+
+- Codex CLI: https://developers.openai.com/codex/cli
+- Codex quickstart: https://developers.openai.com/codex/quickstart
+
+Recommended install command:
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+```
+
+Start it with:
+
+```bash
+codex
+```
+
+### Claude Code
+
+Official docs:
+
+- Claude Code quickstart: https://docs.anthropic.com/en/docs/claude-code/quickstart
+- Claude Code setup: https://docs.anthropic.com/en/docs/claude-code/setup
+
+Recommended install command:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+Start it with:
+
+```bash
+claude
+```
+
+### opencode
+
+Official docs:
+
+- opencode docs: https://opencode.ai/docs/
+- opencode download: https://opencode.ai/download
+
+Recommended install command:
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+Start it with:
+
+```bash
+opencode
+```
+
+If your system policy does not allow `curl | sh` or `curl | bash`, open the official pages above and choose a standalone package, Homebrew, npm, or another trusted installation method for your system.
+
+## Install This Knowledge Base
 
 ### Option 1: Ask an AI Tool to Install It
 
