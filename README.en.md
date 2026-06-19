@@ -78,7 +78,7 @@ Send this prompt to Codex, Claude Code, opencode, or a similar tool:
 ```text
 Please install this KylinOS Desktop V11 system knowledge base:
 
-https://github.com/Swordup-Z/kylinos-desktop-v11-skill
+https://github.com/Swordup-Z/os-fix-skill
 
 Requirements:
 1. Clone it to $HOME/.os-fix-skill.
@@ -95,7 +95,7 @@ Requirements:
 
 ```bash
 cd "$HOME"
-git clone https://github.com/Swordup-Z/kylinos-desktop-v11-skill.git "$HOME/.os-fix-skill"
+git clone https://github.com/Swordup-Z/os-fix-skill.git "$HOME/.os-fix-skill"
 ```
 
 Entry file:
