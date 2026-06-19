@@ -271,13 +271,13 @@ Switching maintenance mode usually requires a reboot. Detailed operational rules
 
 ## Companion Tools
 
-Space cleanup, Kaiming/KARE layer control, and ostree usage auditing should live in a companion application instead of large embedded scripts inside knowledge files. The recommended local companion app is **Kylin Space Guard**:
+Space cleanup, Kaiming/KARE layer control, and ostree usage auditing should live in a companion application instead of large embedded scripts or project-specific development requirements inside knowledge files. If a local development workspace exists, read the project-level prompt first:
 
 ```text
-$HOME/kylin-space-guard
+$HOME/desktop-develop/kylin-space-guard/AGENTS.md
 ```
 
-It should keep a "GUI + auditable CLI helper" structure: the GUI displays scan results, lets the user choose actions, and triggers Polkit authorization; the helper owns dry-run mode, maintenance-mode checks, official `kaiming` uninstall calls, orphan-layer quarantine, and periodic reports. The tool must not automatically delete ostree deployments, EFI files, GRUB config, loader entries, `/etc/fstab`, or partition tables.
+This skill keeps only system diagnostics, safety boundaries, and reusable repair knowledge. Concrete UI, build, verification, dependency, and implementation rules belong in the independent project. Tool projects must still follow this skill's system safety boundary: do not automatically delete ostree deployments, EFI files, GRUB config, loader entries, `/etc/fstab`, or partition tables.
 
 ## License
 

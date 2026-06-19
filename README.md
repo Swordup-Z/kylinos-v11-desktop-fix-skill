@@ -272,13 +272,13 @@ sudo mm-cli -c -a
 
 ## 独立工具
 
-空间清理、Kaiming/KARE 应用层治理、ostree 占用审计这类任务建议使用独立应用承载，而不是把大段脚本直接塞进 knowledge。当前推荐形态是独立桌面应用 **Kylin Space Guard**：
+空间清理、Kaiming/KARE 应用层治理、ostree 占用审计这类任务建议使用独立应用承载，而不是把大段脚本或项目开发要求直接塞进 knowledge。若本机存在独立开发工作区，优先从项目目录读取项目级提示词：
 
 ```text
-$HOME/kylin-space-guard
+$HOME/desktop-develop/kylin-space-guard/AGENTS.md
 ```
 
-它应保持“GUI + 可审计 CLI helper”的结构：GUI 负责扫描结果展示、动作选择和 Polkit 授权；CLI helper 负责 dry-run、维护模式检查、官方 `kaiming` 卸载、孤儿层隔离和定期报告。工具不得自动删除 ostree deployment、EFI、GRUB、loader entries、`/etc/fstab` 或分区表。
+本 skill 只保留系统诊断、安全边界和可复用修复经验；具体 UI、构建、验证、依赖选择和项目实现规则应维护在独立项目内。工具类项目仍必须遵守本 skill 的系统安全边界：不得自动删除 ostree deployment、EFI、GRUB、loader entries、`/etc/fstab` 或分区表。
 
 ## License
 
