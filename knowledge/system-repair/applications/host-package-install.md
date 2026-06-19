@@ -104,6 +104,59 @@ cp -f /path/to/latest.deb "$HOME/下载/<app>_<version>_<arch>.deb"
 
 不要把应用自更新后的版本误判为“安装失败后仍是旧版本”；以 `dpkg-query` 和正在运行的服务路径为准。
 
+## Kylin 仓库 npm 缺失 `@npmcli/fs`
+
+在 KylinOS Desktop V11 上安装仓库内 `nodejs`、`npm` 后，如果 `npm` 或 `npx` 报错：
+
+```text
+Error: Cannot find module '@npmcli/fs'
+Require stack:
+- /usr/share/nodejs/cacache/lib/entry-index.js
+...
+```
+
+先确认不是半安装状态：
+
+```bash
+mm-cli -s
+dpkg --audit
+dpkg -l nodejs npm node-cacache
+npm --version
+npx --version
+```
+
+如果 `dpkg --audit` 无输出、`nodejs`/`npm`/`node-cacache` 均为 `ii`，但 `npm` 仍缺 `@npmcli/fs`，重装通常不能解决：
+
+```bash
+pkexec apt-get install --reinstall -y npm node-cacache
+```
+
+若重装后仍报同样错误，说明当前仓库包的依赖拆分不完整。更稳妥的处理是安装 Node.js 官方二进制包到 `/usr/local` 优先路径，避免覆盖系统包文件：
+
+```bash
+arch="$(uname -m)"
+# aarch64 对应 linux-arm64；x86_64 对应 linux-x64。
+version="<node-version>"
+platform="linux-arm64"
+mkdir -p /tmp/nodejs-install
+curl -fsSL "https://nodejs.org/dist/${version}/SHASUMS256.txt" -o /tmp/nodejs-install/SHASUMS256.txt
+curl -fsSL "https://nodejs.org/dist/${version}/node-${version}-${platform}.tar.xz" -o "/tmp/nodejs-install/node-${version}-${platform}.tar.xz"
+rg "node-${version}-${platform}.tar.xz" /tmp/nodejs-install/SHASUMS256.txt
+sha256sum "/tmp/nodejs-install/node-${version}-${platform}.tar.xz"
+pkexec bash -lc "install -d /usr/local/lib/nodejs && tar -xJf /tmp/nodejs-install/node-${version}-${platform}.tar.xz -C /usr/local/lib/nodejs && ln -sfn /usr/local/lib/nodejs/node-${version}-${platform}/bin/node /usr/local/bin/node && ln -sfn /usr/local/lib/nodejs/node-${version}-${platform}/bin/npm /usr/local/bin/npm && ln -sfn /usr/local/lib/nodejs/node-${version}-${platform}/bin/npx /usr/local/bin/npx"
+```
+
+验证默认命令来自 `/usr/local/bin`，且 `npm`/`npx` 可用：
+
+```bash
+which node npm npx
+node --version
+npm --version
+npx --version
+```
+
+这种方式不删除系统 `nodejs`/`npm` 包，也不覆盖 `/usr/bin/node`、`/usr/bin/npm`、`/usr/bin/npx`；它通过 `/usr/local/bin` 在 PATH 中的优先级提供默认命令。若后续不需要官方版本，可删除 `/usr/local/bin/node`、`/usr/local/bin/npm`、`/usr/local/bin/npx` 以及对应 `/usr/local/lib/nodejs/node-<version>-<platform>` 目录，系统包命令会重新生效。
+
 完成系统级安装后，按维护模式流程执行：
 
 ```bash
