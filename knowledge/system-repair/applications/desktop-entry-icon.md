@@ -96,7 +96,15 @@ pkill -x ukui-menu || true
 
 ## 隐藏 KARE 残留入口并保留可用宿主入口
 
-如果开始菜单里出现一个不可用的 KARE 入口，同时用户实际使用的是宿主机路径或另一个可用入口，优先使用用户级 `.desktop` 覆盖，不直接删除 `/opt/kare` 下的文件。若用户明确要求直接删除，必须先确认维护模式，并区分“桌面入口/命令残留”和“应用本体目录”；不要删除仍在使用的应用本体。
+如果开始菜单里出现一个不可用的 KARE 入口，同时用户实际使用的是宿主机路径或另一个可用入口，优先使用用户级 `.desktop` 覆盖，不直接删除 `/opt/kare` 下的文件。若用户明确要求直接删除，必须先确认维护模式，并区分“桌面入口/命令残留”、“KARE 运行期元数据”和“应用本体目录”；不要删除仍在使用的应用本体。
+
+尤其要注意 `/opt/apps/<app>/<app>` 这类宿主启动脚本。它表面上位于宿主路径，但内部可能仍通过 KARE app-id 启动：
+
+```bash
+sed -n '1,80p' /opt/apps/<app>/<app>
+```
+
+如果脚本包含 `/usr/bin/kare run <app-id> ...`，则 `/opt/kare/usr/share/applications/<app-id>.desktop` 和 `/opt/kare/usr/bin/<app-id>` 可能是运行期元数据，不是纯菜单残留。此时不要删除这些文件；应保留或恢复它们，并在 KARE desktop 中设置 `NoDisplay=true` 隐藏菜单入口，再用用户级可见入口承接开始菜单和 MIME 默认值。
 
 典型做法：
 
@@ -134,7 +142,7 @@ chmod 755 "$HOME/.local/bin/<app>"
 
 5. 若 UKUI 面板或收藏固定的是旧 desktop ID，同步改为新 desktop ID，再刷新菜单。
 
-用户明确要求删除时，可只删除已验证无效的 KARE 暴露入口，例如：
+用户明确要求删除时，只能删除已验证不被当前可用启动链路依赖的 KARE 暴露入口。如果 `/opt/apps/<app>/<app>`、面板固定项、MIME 默认值或应用日志仍引用相同 app-id，改用 `NoDisplay=true` 隐藏，不要删除。确认为无依赖后才可删除，例如：
 
 ```bash
 mm-cli -s
@@ -142,6 +150,25 @@ rm -f /opt/kare/usr/share/applications/<bad-id>.desktop
 rm -f /opt/kare/usr/bin/<bad-command>
 rm -f /opt/kare-applications/<version>/upper/usr/share/applications/<bad-id>.desktop
 rm -f /opt/kare-applications/<version>/upper/usr/bin/<bad-command>
+```
+
+如果已经误删了 KARE 运行期元数据，恢复时优先把 KARE 入口设为隐藏，而不是重新暴露成开始菜单中的第二个应用：
+
+```ini
+[Desktop Entry]
+Type=Application
+Name=<App Name>
+Exec=/usr/bin/kare run <app-id> <app-command> %u
+Icon=<app-id>
+NoDisplay=true
+Categories=Network;WebBrowser;
+```
+
+```bash
+install -D -m 0644 <restored>.desktop /opt/kare/usr/share/applications/<app-id>.desktop
+install -D -m 0755 <restored-command> /opt/kare/usr/bin/<app-id>
+install -D -m 0644 <restored>.desktop /opt/kare-applications/<version>/upper/usr/share/applications/<app-id>.desktop
+install -D -m 0755 <restored-command> /opt/kare-applications/<version>/upper/usr/bin/<app-id>
 ```
 
 如果 `merge/` 视图仍显示旧文件但 `upper/` 源文件已经消失，通常是 overlay 合并视图未刷新。不要为了清一个菜单项强行重挂 KARE overlay，尤其是相关应用仍在运行时；重启 KARE 或系统后再复查。
