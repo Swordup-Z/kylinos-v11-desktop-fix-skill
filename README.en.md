@@ -4,7 +4,7 @@
 
 This repository is a structured repair knowledge base for KylinOS Desktop V11. It records reusable workflows for existing desktop-system behavior that is broken, failing, noisy, not persistent, or caused by damaged system services. It is not an executable program and is not tied to one tool's built-in directory. The entry file is `$HOME/.os-fix-skill/SKILL.md`; detailed content is organized under `references/` and `knowledge/`.
 
-It covers UKUI, KARE/Kaiming, Clash Verge TUN, application installation, aTrust/UEM security clients, autostart, global search, system tray behavior, input methods, system services, maintenance mode, the PanShi architecture, fingerprint and graphics hardware, storage layout, and desktop AI subsystem cleanup.
+It covers UKUI, KARE/Kaiming, Clash Verge TUN, application installation, aTrust/UEM security clients, autostart, global search, system tray behavior, screen-lock timeout, input methods, system services, maintenance mode, the PanShi architecture, fingerprint and graphics hardware, storage layout, and desktop AI subsystem cleanup.
 
 Feature enhancement, local customization, default-behavior changes, and source-level feature additions are maintained in the companion enhancement knowledge base.
 
@@ -183,7 +183,7 @@ For tasks such as adding a custom command panel to UKUI global search or connect
 - Maintenance mode, the PanShi architecture, and system-level modification boundaries.
 - Application installation, AppImage, third-party apt sources, KARE/Kaiming isolation, and aTrust/UEM security-client components.
 - Clash Verge TUN, `/dev/net/tun`, proxy services, and proxy core paths.
-- UKUI autostart, global-search issues, shortcuts, system tray, input methods, panel/taskbar behavior, and open-with file-dialog behavior.
+- UKUI autostart, global-search issues, shortcuts, system tray, screen-lock timeout, input methods, panel/taskbar behavior, and open-with file-dialog behavior.
 - Desktop AI components, AI subsystem cleanup, and residues.
 - Fingerprint/biometric authentication, graphics frequency, and hardware stability.
 - Root partition, DATA partition, `/home` mount location, overlay views, Kaiming/KARE, and ostree disk-usage analysis.
