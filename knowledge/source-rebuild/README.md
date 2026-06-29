@@ -7,7 +7,7 @@
 - 修复目标必须是已有能力异常、失效、报错、不能持久化或系统服务损坏。
 - 如果目标是新增能力、改变默认行为或本地客制化，切换到 `$HOME/.os-enhance-skill/SKILL.md`。
 - 源码、构建目录、staging、回滚包和符号对比文件优先放到 `/data/usershare/kylinos-local-sources/<component-or-fix>/`，不要占用根分区或 `$HOME` 临时目录。
-- 可跨机器复用的修复 patch 放到本仓库对应修复场景的 `knowledge/system-repair/<scenario>/patches/<fix-id>/`。
+- 可跨机器复用的修复 patch 放到本仓库对应修复场景的 `knowledge/<scenario>/patches/<fix-id>/`。
 - 安装构建依赖、替换系统文件或安装本地包前必须先检查维护模式。
 
 与具体修复相关的源码章节放在对应场景下，例如：

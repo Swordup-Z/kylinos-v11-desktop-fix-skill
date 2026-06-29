@@ -78,6 +78,38 @@ cd "$HOME"
 git clone https://github.com/Swordup-Z/kylinos-v11-desktop-fix-skill.git "$HOME/.os-fix-skill"
 ```
 
+### Install by Pasting a Prompt into an AI Tool
+
+You can also paste the following prompt into Codex, Claude Code, or opencode and let the AI tool install and connect this knowledge base for you:
+
+```text
+Please install the KylinOS Desktop V11 repair knowledge base kylinos-v11-desktop-fix-skill on this machine and connect it to the current AI tool's user-level rule file.
+
+Requirements:
+1. Check that git is available first.
+2. If $HOME/.os-fix-skill does not exist, run:
+   git clone https://github.com/Swordup-Z/kylinos-v11-desktop-fix-skill.git "$HOME/.os-fix-skill"
+3. If $HOME/.os-fix-skill already exists and is a git repository, only use non-destructive updates:
+   git -C "$HOME/.os-fix-skill" status -sb
+   git -C "$HOME/.os-fix-skill" fetch --prune
+   git -C "$HOME/.os-fix-skill" pull --ff-only
+   If there are local changes, branch divergence, or a fast-forward failure, do not overwrite anything; report the reason instead.
+4. If $HOME/.os-fix-skill already exists but is not a git repository, do not delete or overwrite it; stop and explain why.
+5. Confirm that $HOME/.os-fix-skill/SKILL.md exists.
+6. Create the parent directory for the current AI tool's user-level rule file if needed.
+7. Append the rules below to the current AI tool's user-level rule file. If you cannot identify the current tool, ask me first. Do not overwrite existing content, and do not append duplicate rules if equivalent rules already exist.
+
+Rule file locations:
+- Codex: $HOME/.codex/AGENTS.md
+- Claude Code: $HOME/.claude/CLAUDE.md
+- opencode: $HOME/.config/opencode/AGENTS.md
+
+Rules to append:
+When the user is working on KylinOS Desktop V11, UKUI, KARE, Kaiming, Clash Verge, system services, autostart, TUN, maintenance mode, the PanShi architecture, system protection, partitions, mounts, overlay, desktop AI subsystem, or related desktop operating-system issues, and the symptom is an existing capability that is broken, failing, noisy, not persistent, failing to install, or caused by damaged system services, use $HOME/.os-fix-skill/SKILL.md as the default knowledge entry. Before handling a system repair issue, read $HOME/.os-fix-skill/SKILL.md, then follow its reference routing and selectively read references/<scenario>.md. If no specialized reference matches, at least read $HOME/.os-fix-skill/references/system.md. Follow "diagnose first, modify second, verify last". Before any system-level repair involving /usr, /etc, /opt, system packages, system services, device nodes, partitions, KSaf policies, or similar system paths, run mm-cli -s to check maintenance mode; only modify system paths, system services, or system packages after confirming the machine is in maintain mode.
+
+When finished, tell me the repository path, the rule file path you updated, and whether any update was skipped because of local changes or branch state.
+```
+
 Entry file:
 
 ```text
@@ -92,7 +124,7 @@ Claude Code: $HOME/.claude/CLAUDE.md
 opencode:    $HOME/.config/opencode/AGENTS.md
 ```
 
-After these rule files are connected to this knowledge base, KylinOS Desktop V11 repair issues can start from `$HOME/.os-fix-skill/SKILL.md` and then follow `references/system-repair/`. Feature enhancement, local customization, and default-behavior changes are maintained in `$HOME/.os-enhance-skill`.
+After these rule files are connected to this knowledge base, KylinOS Desktop V11 repair issues can start from `$HOME/.os-fix-skill/SKILL.md` and then follow `references/`. Feature enhancement, local customization, and default-behavior changes are maintained in `$HOME/.os-enhance-skill`.
 
 Use a fixed session name for system maintenance, such as `os-fix`:
 
@@ -126,26 +158,31 @@ $HOME/.os-fix-skill/
 ├── SKILL.md
 ├── references/
 │   ├── README.md
-│   └── system-repair/
-│       ├── README.md
-│       ├── system.md
-│       ├── applications.md
-│       ├── ukui.md
-│       ├── network.md
-│       ├── hardware.md
-│       ├── storage.md
-│       ├── agent-tools.md
-│       └── source-rebuild.md
+│   ├── system.md
+│   ├── applications.md
+│   ├── ukui.md
+│   ├── network.md
+│   ├── hardware.md
+│   ├── storage.md
+│   ├── agent-tools.md
+│   └── source-rebuild.md
 ├── knowledge/
 │   ├── README.md
-│   └── system-repair/
+│   ├── system/
+│   ├── applications/
+│   ├── ukui/
+│   ├── network/
+│   ├── hardware/
+│   ├── storage/
+│   ├── agent-tools/
+│   └── source-rebuild/
 ├── scripts/
 │   └── cleanup-kylin-ai.sh
 ├── README.md
 └── README.en.md
 ```
 
-`references/` is the scenario routing layer. Each reference contains scope, a short explanation, a knowledge entry, and minimal diagnostics. `knowledge/system-repair/<scenario>/README.md` is the scenario index that routes to one concrete chapter. The concrete `<topic>.md` files contain background, diagnosis, repair steps, verification, rollback, and cleanup notes. Reusable source-level repairs also keep patch sets and `PATCHSET.md` metadata under the same scenario's `patches/<fix-id>/` directory.
+`references/` is the scenario routing layer. Each reference contains scope, a short explanation, a knowledge entry, and minimal diagnostics. `knowledge/<scenario>/README.md` is the scenario index that routes to one concrete chapter. The concrete `<topic>.md` files contain background, diagnosis, repair steps, verification, rollback, and cleanup notes. Reusable source-level repairs also keep patch sets and `PATCHSET.md` metadata under the same scenario's `patches/<fix-id>/` directory.
 
 Fixed loading path:
 
@@ -162,18 +199,18 @@ Clash Verge TUN failure:
 
 ```text
 SKILL.md
--> references/system-repair/network.md
--> knowledge/system-repair/network/README.md
--> knowledge/system-repair/network/proxy-tun.md
+-> references/network.md
+-> knowledge/network/README.md
+-> knowledge/network/proxy-tun.md
 ```
 
 UKUI global search showing uninstalled Software Center apps:
 
 ```text
 SKILL.md
--> references/system-repair/ukui.md
--> knowledge/system-repair/ukui/README.md
--> knowledge/system-repair/ukui/search.md
+-> references/ukui.md
+-> knowledge/ukui/README.md
+-> knowledge/ukui/search.md
 ```
 
 For tasks such as adding a custom command panel to UKUI global search or connecting shared knowledge bases, use `$HOME/.os-enhance-skill/SKILL.md`.

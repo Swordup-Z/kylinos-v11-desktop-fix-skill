@@ -2,24 +2,18 @@
 
 `knowledge/` 保存具体可复用系统修复知识，包括背景、诊断、修复步骤、验证、回滚和清理规则。
 
-## 知识入口
-
-- `system-repair/`：系统已有能力异常、失效、报错、不能持久化、安装失败或系统服务损坏的修复知识。
-
 功能增强、本地客制化和默认行为调整已拆分到 `$HOME/.os-enhance-skill`。
 
-场景分类：
+## 场景分类
 
-```text
-system/
-applications/
-ukui/
-network/
-hardware/
-storage/
-agent-tools/
-source-rebuild/
-```
+- `system/`：维护模式、系统服务、系统体检噪声。
+- `applications/`：应用安装、AppImage、KARE/Kaiming 隔离。
+- `ukui/`：UKUI 自启动、全局搜索异常、托盘、快捷键、AI 组件、系统服务。
+- `network/`：代理、TUN、Clash Verge。
+- `hardware/`：指纹、生物识别、图形频率。
+- `storage/`：分区、挂载、DATA、overlay。
+- `agent-tools/`：系统修复中的 AI 工具权限边界。
+- `source-rebuild/`：必须源码重编译才能修复的系统问题。
 
 ## 渐进式披露
 
@@ -27,9 +21,9 @@ source-rebuild/
 
 ```text
 SKILL.md
--> references/system-repair/<scenario>.md
--> knowledge/system-repair/<scenario>/README.md
--> knowledge/system-repair/<scenario>/<topic>.md
+-> references/<scenario>.md
+-> knowledge/<scenario>/README.md
+-> knowledge/<scenario>/<topic>.md
 ```
 
 `references/` 只做实际修复场景路由；场景 `README.md` 只做特定分类和具体实例索引；具体 `<topic>.md` 才记录处理过程。新增经验时先判断场景，再放入对应目录；如果没有合适章节，新建一个最小主题文件，并从同场景 README 链接过去。
@@ -37,8 +31,8 @@ SKILL.md
 通过源码修改实现的可复用修复，patch 集放在同场景目录下：
 
 ```text
-knowledge/system-repair/<scenario>/patches/<fix-id>/PATCHSET.md
-knowledge/system-repair/<scenario>/patches/<fix-id>/*.patch
+knowledge/<scenario>/patches/<fix-id>/PATCHSET.md
+knowledge/<scenario>/patches/<fix-id>/*.patch
 ```
 
 只有需要在源码树中复用或迁移该功能时才读取 patch 集。

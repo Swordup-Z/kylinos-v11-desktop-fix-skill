@@ -8,7 +8,7 @@
 
 - 需求类型：系统问题修复。
 - 实际场景：UKUI 托盘。
-- 知识入口：`knowledge/system-repair/ukui/system-tray-source.md`。
+- 知识入口：`knowledge/ukui/system-tray-source.md`。
 
 ## 上游与基线
 

@@ -10,7 +10,7 @@
 
 进入网络与代理索引后，按代理、TUN、`/dev/net/tun`、网络发现弹窗或代理核心路径继续读取具体知识。
 
-- [`../../knowledge/system-repair/network/README.md`](../../knowledge/system-repair/network/README.md)
+- [`../knowledge/network/README.md`](../knowledge/network/README.md)
 
 ## 最小诊断
 

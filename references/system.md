@@ -10,7 +10,7 @@
 
 进入系统基础索引后，按维护模式、系统保护、系统体检噪声或桌面服务启动链路继续读取具体知识。
 
-- [`../../knowledge/system-repair/system/README.md`](../../knowledge/system-repair/system/README.md)
+- [`../knowledge/system/README.md`](../knowledge/system/README.md)
 
 ## 最小诊断
 

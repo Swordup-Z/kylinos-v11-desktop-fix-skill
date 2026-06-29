@@ -10,7 +10,7 @@
 
 进入存储与挂载索引后，按分区、挂载、DATA、`/home`、backup、overlay 或空间占用继续读取具体知识。
 
-- [`../../knowledge/system-repair/storage/README.md`](../../knowledge/system-repair/storage/README.md)
+- [`../knowledge/storage/README.md`](../knowledge/storage/README.md)
 
 ## 最小诊断
 

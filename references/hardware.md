@@ -9,7 +9,7 @@
 
 进入硬件与驱动索引后，按设备类型选择“指纹/生物识别”或“图形/devfreq/硬件稳定性”知识。
 
-- [`../../knowledge/system-repair/hardware/README.md`](../../knowledge/system-repair/hardware/README.md)
+- [`../knowledge/hardware/README.md`](../knowledge/hardware/README.md)
 
 ## 最小诊断
 

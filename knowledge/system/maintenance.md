@@ -31,7 +31,7 @@
 6. 优先做根因修复。workaround、watchdog、定时重启、自动重拉起等兜底方案只能作为临时恢复手段，不能替代根因定位。
 7. 优先做持久化修复：临时止血后，继续确认重启、重新登录、服务重拉起或应用重启后是否仍然有效。
 8. 修改完成后验证功能和状态，并说明哪些修复是运行时生效、哪些已写入持久配置。
-9. 如果产生新的可复用修复经验，更新 `SKILL.md`、新增/扩展 `references/system-repair/` 路由，或沉淀到对应 `knowledge/system-repair/` 章节；如果实际是功能增强经验，切换到 `$HOME/.os-enhance-skill` 记录。
+9. 如果产生新的可复用修复经验，更新 `SKILL.md`、新增/扩展 `references/` 路由，或沉淀到对应 `knowledge/` 章节；如果实际是功能增强经验，切换到 `$HOME/.os-enhance-skill` 记录。
 
 ## 维护模式检查
 
@@ -59,7 +59,7 @@ sudo mm-cli -o
 
 进入维护模式后需要重启系统，重启后重新打开 AI 工具再继续修复。在进入维护模式并重启前，只允许诊断、读取状态、查看日志、模拟安装/卸载等非破坏操作。
 
-应用安装、AppImage、KARE 环境误装、第三方 apt 源和公钥问题属于安装/包管理知识，应改读 `knowledge/system-repair/applications/README.md`，不要把具体安装步骤继续追加到本文档。
+应用安装、AppImage、KARE 环境误装、第三方 apt 源和公钥问题属于安装/包管理知识，应改读 `knowledge/applications/README.md`，不要把具体安装步骤继续追加到本文档。
 
 ## 退出维护模式
 
@@ -144,9 +144,9 @@ apt-cache policy <package>
 
 本文档只保留系统级修复的底座规则。具体场景应继续按需读取对应场景索引：
 
-- 应用安装、AppImage、KARE 环境误装、第三方 apt 源和公钥问题：读取 `knowledge/system-repair/applications/README.md`。
-- 应用隔离与宿主机边界、KARE/Kaiming namespace、应用内 hostname 显示 `kare`、从隔离环境误启动 UKUI 面板、开始菜单固定项仍指向隔离环境：读取 `knowledge/system-repair/applications/README.md`。
-- 全盘体检后的系统噪声清理、`motd-news.service`、PAM 残留引用、rsyslog 旧式配置：读取 `knowledge/system-repair/system/health-noise.md`。
+- 应用安装、AppImage、KARE 环境误装、第三方 apt 源和公钥问题：读取 `knowledge/applications/README.md`。
+- 应用隔离与宿主机边界、KARE/Kaiming namespace、应用内 hostname 显示 `kare`、从隔离环境误启动 UKUI 面板、开始菜单固定项仍指向隔离环境：读取 `knowledge/applications/README.md`。
+- 全盘体检后的系统噪声清理、`motd-news.service`、PAM 残留引用、rsyslog 旧式配置：读取 `knowledge/system/health-noise.md`。
 
 ## 未覆盖问题的经验沉淀
 
@@ -163,8 +163,8 @@ git -C "$HOME/.os-fix-skill" pull --ff-only
 
 如果实际解决的是当前 skill 尚未覆盖的系统问题：
 
-1. 新增合适的 `references/system-repair/<scenario>.md` 作为分类入口，或扩展最接近的现有 reference。
-2. 将详细诊断、修复、验证、回滚和清理经验沉淀到对应 `knowledge/system-repair/` 章节。
+1. 新增合适的 `references/<scenario>.md` 作为分类入口，或扩展最接近的现有 reference。
+2. 将详细诊断、修复、验证、回滚和清理经验沉淀到对应 `knowledge/` 章节。
 3. 在 `SKILL.md` 的“参考文档”中补充入口和触发场景。
 4. 文档使用中文，避免写入当前用户专属路径、用户名或一次性状态。
 5. 使用 `$HOME`、`<user>`、`<app-id>`、`<desktop-id>`、`<service-name>` 等通用占位符。

@@ -78,6 +78,38 @@ cd "$HOME"
 git clone https://github.com/Swordup-Z/kylinos-v11-desktop-fix-skill.git "$HOME/.os-fix-skill"
 ```
 
+### 复制给 AI 工具执行安装
+
+也可以把下面整段复制给 Codex、Claude Code 或 opencode，让 AI 工具代为安装并接入用户级规则文件：
+
+```text
+请帮我在本机安装 KylinOS Desktop V11 系统修复经验库 kylinos-v11-desktop-fix-skill，并接入当前 AI 工具的用户级规则文件。
+
+执行要求：
+1. 先检查 git 是否可用。
+2. 如果 $HOME/.os-fix-skill 不存在，执行：
+   git clone https://github.com/Swordup-Z/kylinos-v11-desktop-fix-skill.git "$HOME/.os-fix-skill"
+3. 如果 $HOME/.os-fix-skill 已存在且是 git 仓库，只允许执行非破坏更新：
+   git -C "$HOME/.os-fix-skill" status -sb
+   git -C "$HOME/.os-fix-skill" fetch --prune
+   git -C "$HOME/.os-fix-skill" pull --ff-only
+   如果存在本地改动、分支分叉或 fast-forward 失败，不要覆盖，直接说明原因。
+4. 如果 $HOME/.os-fix-skill 已存在但不是 git 仓库，不要删除或覆盖，直接停止并说明原因。
+5. 确认 $HOME/.os-fix-skill/SKILL.md 存在。
+6. 必要时创建当前 AI 工具用户级规则文件的父目录。
+7. 将下面规则追加到当前 AI 工具的用户级规则文件；如果无法判断当前工具，则优先询问我。不要覆盖已有内容，已有同等规则时不要重复追加。
+
+规则文件位置：
+- Codex: $HOME/.codex/AGENTS.md
+- Claude Code: $HOME/.claude/CLAUDE.md
+- opencode: $HOME/.config/opencode/AGENTS.md
+
+需要追加的规则：
+当用户处理 KylinOS Desktop V11、UKUI、KARE、Kaiming、Clash Verge、系统服务、开机自启动、TUN、维护模式、磐石架构、系统保护、分区、挂载、overlay、AI 子系统等桌面操作系统问题，且现象属于已有能力异常、失效、报错、不能持久化、安装失败或系统服务损坏时，默认使用 $HOME/.os-fix-skill/SKILL.md 作为经验入口。开始处理系统修复问题前，先读取 $HOME/.os-fix-skill/SKILL.md，再按其中“参考文档路由”选择性读取 references/<scenario>.md；如果没有命中专门 reference，至少读取 $HOME/.os-fix-skill/references/system.md。处理问题时遵循“先诊断、再修改、最后验证”；涉及 /usr、/etc、/opt、系统包、系统服务、设备节点、分区、KSaf 策略等系统级修复前，必须先运行 mm-cli -s 检查维护模式，只有确认当前是 maintain mode 才允许实际修改系统路径、系统服务或系统包。
+
+完成后请告诉我仓库路径、已更新的规则文件路径，以及是否因为已有本地改动或分支状态跳过了更新。
+```
+
 入口文件是：
 
 ```text
@@ -92,7 +124,7 @@ Claude Code: $HOME/.claude/CLAUDE.md
 opencode:    $HOME/.config/opencode/AGENTS.md
 ```
 
-把这些规则文件接入本经验库后，KylinOS Desktop V11 桌面系统修复问题可从 `$HOME/.os-fix-skill/SKILL.md` 进入，再按其中的 `references/system-repair/` 路由继续查阅。功能增强、本地客制化和默认行为调整由 `$HOME/.os-enhance-skill` 维护。
+把这些规则文件接入本经验库后，KylinOS Desktop V11 桌面系统修复问题可从 `$HOME/.os-fix-skill/SKILL.md` 进入，再按其中的 `references/` 路由继续查阅。功能增强、本地客制化和默认行为调整由 `$HOME/.os-enhance-skill` 维护。
 
 系统维护使用固定会话名，例如 `os-fix`。之后遇到系统问题时，恢复同一个会话继续处理：
 
@@ -126,26 +158,31 @@ $HOME/.os-fix-skill/
 ├── SKILL.md
 ├── references/
 │   ├── README.md
-│   └── system-repair/
-│       ├── README.md
-│       ├── system.md
-│       ├── applications.md
-│       ├── ukui.md
-│       ├── network.md
-│       ├── hardware.md
-│       ├── storage.md
-│       ├── agent-tools.md
-│       └── source-rebuild.md
+│   ├── system.md
+│   ├── applications.md
+│   ├── ukui.md
+│   ├── network.md
+│   ├── hardware.md
+│   ├── storage.md
+│   ├── agent-tools.md
+│   └── source-rebuild.md
 ├── knowledge/
 │   ├── README.md
-│   └── system-repair/
+│   ├── system/
+│   ├── applications/
+│   ├── ukui/
+│   ├── network/
+│   ├── hardware/
+│   ├── storage/
+│   ├── agent-tools/
+│   └── source-rebuild/
 ├── scripts/
 │   └── cleanup-kylin-ai.sh
 ├── README.md
 └── README.en.md
 ```
 
-`references/` 是场景入口和策略路由层，包含适用场景、简短说明、知识入口和最小诊断。`knowledge/system-repair/<scenario>/README.md` 是场景内索引，负责把问题继续路由到具体章节。具体 `<topic>.md` 保存背景、诊断、修复步骤、验证、回滚和清理规则。通过源码修改实现的可复用修复还会在同场景 `patches/<fix-id>/` 下保存 patch 集和 `PATCHSET.md` 元数据。
+`references/` 是场景入口和策略路由层，包含适用场景、简短说明、知识入口和最小诊断。`knowledge/<scenario>/README.md` 是场景内索引，负责把问题继续路由到具体章节。具体 `<topic>.md` 保存背景、诊断、修复步骤、验证、回滚和清理规则。通过源码修改实现的可复用修复还会在同场景 `patches/<fix-id>/` 下保存 patch 集和 `PATCHSET.md` 元数据。
 
 固定加载链路：
 
@@ -162,18 +199,18 @@ Clash Verge TUN 模式失败：
 
 ```text
 SKILL.md
--> references/system-repair/network.md
--> knowledge/system-repair/network/README.md
--> knowledge/system-repair/network/proxy-tun.md
+-> references/network.md
+-> knowledge/network/README.md
+-> knowledge/network/proxy-tun.md
 ```
 
 UKUI 全局搜索显示软件商店未安装应用：
 
 ```text
 SKILL.md
--> references/system-repair/ukui.md
--> knowledge/system-repair/ukui/README.md
--> knowledge/system-repair/ukui/search.md
+-> references/ukui.md
+-> knowledge/ukui/README.md
+-> knowledge/ukui/search.md
 ```
 
 给 UKUI 全局搜索增加自定义命令面板、接入共享经验库等增强任务，可从 `$HOME/.os-enhance-skill/SKILL.md` 进入。

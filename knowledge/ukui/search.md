@@ -11,7 +11,7 @@
 - 设置界面的“默认互联网搜索引擎”只提供少数固定选项，用户希望添加 Bing、Google 等搜索引擎。
 - 希望在全局搜索中出现可点击的系统动作或自定义命令，例如清空回收站。
 
-快捷键冲突、`Alt+Space` 等问题不在本章节处理，应改读 `knowledge/system-repair/ukui/keybindings.md`。
+快捷键冲突、`Alt+Space` 等问题不在本章节处理，应改读 `knowledge/ukui/keybindings.md`。
 
 ## 先诊断
 
@@ -56,7 +56,7 @@ libsearch/websearch/web-search-plugin.cpp
 
 要真正新增 Bing/Google，不应只改 gsettings，也不应只补图标；需要同时修改设置插件下拉框和后端 URL 映射，然后以与当前系统包匹配的版本重新构建、安装。没有当前系统包的精确源码和构建依赖时，不通过二进制字符串 patch 或替换共享库处理，因为这会影响 UKUI 全局搜索和控制中心稳定性。
 
-如果需要进入修复类源码修改，先读取 `knowledge/system-repair/source-rebuild/README.md`。如果源码修改目标是新增搜索引擎、自定义命令 provider 等功能增强，切换到 `$HOME/.os-enhance-skill/SKILL.md`。
+如果需要进入修复类源码修改，先读取 `knowledge/source-rebuild/README.md`。如果源码修改目标是新增搜索引擎、自定义命令 provider 等功能增强，切换到 `$HOME/.os-enhance-skill/SKILL.md`。
 
 判断源码是否与当前系统包精确匹配时，先看本机二进制包版本：
 
