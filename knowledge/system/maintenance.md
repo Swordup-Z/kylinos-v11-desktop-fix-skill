@@ -184,13 +184,28 @@ git -C "$HOME/.os-fix-skill" worktree remove "$worktree"
 
 随后在 `$HOME/.os-fix-skill-patches/INDEX.md` 追加一条索引，至少包含场景、问题摘要、patch 路径、适用的 skill commit、验证状态和是否已上游化。后续处理同类问题时，只有场景匹配才读取对应 patch；不要一次性加载整个 patch 目录。除非用户明确要求临时套用 patch，否则不要把 sidecar patch 应用到 `$HOME/.os-fix-skill` 主工作树。
 
-拥有仓库写权限的开发者维护本仓库时，才直接修改仓库文档并按当前开发环境的全局提示词或项目规则处理后续仓库维护；相关规则不写入面向普通使用者的 skill 规则。
+拥有仓库写权限的开发者维护本仓库时，先显式进入开发者维护模式。只有本地标记为维护者且 dry-run push 通过，才直接修改仓库文档、commit，并按当前开发环境的全局提示词或项目规则 push；否则仍走 sidecar patch，避免制造本地分叉。
+
+维护者检查命令：
+
+```bash
+skill_dir="$HOME/.os-fix-skill"; if git -C "$skill_dir" push --dry-run --porcelain origin HEAD:refs/heads/main >/dev/null 2>&1; then git -C "$skill_dir" config --local osSkill.maintainer true; else git -C "$skill_dir" config --local --unset osSkill.maintainer 2>/dev/null || true; fi
+```
+
+后续沉淀经验前再确认：
+
+```bash
+test "$(git -C "$HOME/.os-fix-skill" config --get osSkill.maintainer)" = true && \
+  git -C "$HOME/.os-fix-skill" push --dry-run --porcelain origin HEAD:refs/heads/main >/dev/null
+```
+
+不要采用“无权限时先 commit、导出 patch、再 reset 到远端”的流程；不要自动切换开发分支保存普通使用者经验。这两种方式都会让普通使用者的 skill 仓库更容易偏离上游。
 
 如果实际解决的是当前 skill 尚未覆盖的系统问题：
 
 1. 普通使用者侧先生成包含文档变更的 sidecar patch，并记录到 `$HOME/.os-fix-skill-patches/INDEX.md`。
-2. 开发者侧新增合适的 `references/<scenario>.md` 作为分类入口，或扩展最接近的现有 reference。
-3. 开发者侧将详细诊断、修复、验证、回滚和清理经验沉淀到对应 `knowledge/` 章节。
+2. 开发者维护模式下新增合适的 `references/<scenario>.md` 作为分类入口，或扩展最接近的现有 reference。
+3. 开发者维护模式下将详细诊断、修复、验证、回滚和清理经验沉淀到对应 `knowledge/` 章节。
 4. 只有入口边界、触发范围或路由结构变化时，才在 `SKILL.md` 的“参考文档”中补充入口和触发场景。
 5. 文档使用中文，避免写入当前用户专属路径、用户名或一次性状态。
 6. 使用 `$HOME`、`<user>`、`<app-id>`、`<desktop-id>`、`<service-name>` 等通用占位符。
