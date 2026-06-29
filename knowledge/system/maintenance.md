@@ -161,11 +161,37 @@ git -C "$HOME/.os-fix-skill" pull --ff-only
 
 同步前必须确认工作树没有本地未提交改动；如果存在本地修改、分支分叉、网络不可用或 `pull --ff-only` 失败，不要执行强制覆盖、reset 或 rebase。同步失败不是问题处理的阻塞条件，继续使用当前本地 skill、模型自身能力和通用系统维护经验诊断即可。
 
+普通使用者通常没有本仓库写权限。为了让 `$HOME/.os-fix-skill` 保持可 `git pull --ff-only` 的干净上游副本，使用者侧新增经验默认保存为 sidecar patch，不直接写入或提交到 skill 工作树：
+
+```text
+$HOME/.os-fix-skill-patches/INDEX.md
+$HOME/.os-fix-skill-patches/patches/<YYYYMMDD>-<scenario>-<topic>.patch
+```
+
+生成本地 patch 时使用临时 worktree 或临时副本，避免污染主 skill 目录。推荐流程：
+
+```bash
+stamp="$(date +%Y%m%d-%H%M%S)"
+worktree="/tmp/os-fix-skill-patch-$stamp"
+patch_dir="$HOME/.os-fix-skill-patches/patches"
+mkdir -p "$patch_dir"
+git -C "$HOME/.os-fix-skill" worktree add --detach "$worktree" HEAD
+# 在 "$worktree" 中新增或修改 references/、knowledge/ 或必要的 SKILL.md 路由。
+git -C "$worktree" add -N references knowledge SKILL.md 2>/dev/null || true
+git -C "$worktree" diff --binary > "$patch_dir/${stamp}-<scenario>-<topic>.patch"
+git -C "$HOME/.os-fix-skill" worktree remove "$worktree"
+```
+
+随后在 `$HOME/.os-fix-skill-patches/INDEX.md` 追加一条索引，至少包含场景、问题摘要、patch 路径、适用的 skill commit、验证状态和是否已上游化。后续处理同类问题时，只有场景匹配才读取对应 patch；不要一次性加载整个 patch 目录。除非用户明确要求临时套用 patch，否则不要把 sidecar patch 应用到 `$HOME/.os-fix-skill` 主工作树。
+
+拥有仓库写权限的开发者维护本仓库时，才直接修改仓库文档并按当前开发环境的全局提示词或项目规则处理后续仓库维护；相关规则不写入面向普通使用者的 skill 规则。
+
 如果实际解决的是当前 skill 尚未覆盖的系统问题：
 
-1. 新增合适的 `references/<scenario>.md` 作为分类入口，或扩展最接近的现有 reference。
-2. 将详细诊断、修复、验证、回滚和清理经验沉淀到对应 `knowledge/` 章节。
-3. 在 `SKILL.md` 的“参考文档”中补充入口和触发场景。
-4. 文档使用中文，避免写入当前用户专属路径、用户名或一次性状态。
-5. 使用 `$HOME`、`<user>`、`<app-id>`、`<desktop-id>`、`<service-name>` 等通用占位符。
-6. 最终回复中说明经验已记录到哪个文档；如果没有新增可复用经验，说明原因。
+1. 普通使用者侧先生成包含文档变更的 sidecar patch，并记录到 `$HOME/.os-fix-skill-patches/INDEX.md`。
+2. 开发者侧新增合适的 `references/<scenario>.md` 作为分类入口，或扩展最接近的现有 reference。
+3. 开发者侧将详细诊断、修复、验证、回滚和清理经验沉淀到对应 `knowledge/` 章节。
+4. 只有入口边界、触发范围或路由结构变化时，才在 `SKILL.md` 的“参考文档”中补充入口和触发场景。
+5. 文档使用中文，避免写入当前用户专属路径、用户名或一次性状态。
+6. 使用 `$HOME`、`<user>`、`<app-id>`、`<desktop-id>`、`<service-name>` 等通用占位符。
+7. 最终回复中说明经验已记录到哪个文档或哪个本地 patch；如果没有新增可复用经验，说明原因。

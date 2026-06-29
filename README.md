@@ -100,7 +100,7 @@ opencode
 - opencode: $HOME/.config/opencode/AGENTS.md
 
 需要追加的规则：
-当用户处理 KylinOS Desktop V11、UKUI、KARE、Kaiming、Clash Verge、系统服务、开机自启动、TUN、维护模式、磐石架构、系统保护、分区、挂载、overlay、AI 子系统等桌面操作系统问题，且现象属于已有能力异常、失效、报错、不能持久化、安装失败或系统服务损坏时，默认使用 $HOME/.os-fix-skill/SKILL.md 作为经验入口。开始处理系统修复问题前，先读取 $HOME/.os-fix-skill/SKILL.md，再按其中“参考文档路由”选择性读取 references/<scenario>.md；随后只读取该 reference 指向的 knowledge/<scenario>/README.md，以及与当前现象匹配的一个具体 knowledge 章节。如果没有命中具体 reference 或 knowledge 章节，不要遍历整个 skill；只有问题明确属于维护模式、系统保护、systemd/D-Bus 基础服务或系统体检噪声时，才读取 $HOME/.os-fix-skill/references/system.md。处理问题时遵循“先诊断、再修改、最后验证”；涉及 /usr、/etc、/opt、系统包、系统服务、设备节点、分区、KSaf 策略等系统级修复前，必须先运行 mm-cli -s 检查维护模式，只有确认当前是 maintain mode 才允许实际修改系统路径、系统服务或系统包。
+当用户处理 KylinOS Desktop V11、UKUI、KARE、Kaiming、Clash Verge、系统服务、开机自启动、TUN、维护模式、磐石架构、系统保护、分区、挂载、overlay、AI 子系统等桌面操作系统问题，且现象属于已有能力异常、失效、报错、不能持久化、安装失败或系统服务损坏时，默认使用 $HOME/.os-fix-skill/SKILL.md 作为经验入口。开始处理系统修复问题前，先读取 $HOME/.os-fix-skill/SKILL.md，再按其中“参考文档路由”选择性读取 references/<scenario>.md；随后只读取该 reference 指向的 knowledge/<scenario>/README.md，以及与当前现象匹配的一个具体 knowledge 章节。如果没有命中具体 reference 或 knowledge 章节，不要遍历整个 skill；只有问题明确属于维护模式、系统保护、systemd/D-Bus 基础服务或系统体检噪声时，才读取 $HOME/.os-fix-skill/references/system.md。处理问题时遵循“先诊断、再修改、最后验证”；涉及 /usr、/etc、/opt、系统包、系统服务、设备节点、分区、KSaf 策略等系统级修复前，必须先运行 mm-cli -s 检查维护模式，只有确认当前是 maintain mode 才允许实际修改系统路径、系统服务或系统包。普通使用者确认产生新增可复用修复经验时，不要直接修改或提交 $HOME/.os-fix-skill；应生成 $HOME/.os-fix-skill-patches/ 下的本地 patch，保持 skill 仓库可继续 git pull --ff-only。拥有仓库写权限的开发者按当前开发环境的全局提示词或项目规则维护仓库。
 
 完成后请告诉我仓库路径、已更新的规则文件路径，以及是否因为已有本地改动或分支状态跳过了更新。
 ```
@@ -148,9 +148,13 @@ ${EDITOR:-vi} "$HOME/.codex/AGENTS.md"
 开始处理系统修复问题前，先读取 $HOME/.os-fix-skill/SKILL.md，再按其中“参考文档路由”选择性读取 references/<scenario>.md；随后只读取该 reference 指向的 knowledge/<scenario>/README.md，以及与当前现象匹配的一个具体 knowledge 章节。如果没有命中具体 reference 或 knowledge 章节，不要遍历整个 skill；只有问题明确属于维护模式、系统保护、systemd/D-Bus 基础服务或系统体检噪声时，才读取 $HOME/.os-fix-skill/references/system.md。
 
 处理问题时遵循“先诊断、再修改、最后验证”；涉及 /usr、/etc、/opt、系统包、系统服务、设备节点、分区、KSaf 策略等系统级修复前，必须先运行 mm-cli -s 检查维护模式，只有确认当前是 maintain mode 才允许实际修改系统路径、系统服务或系统包。
+
+普通使用者确认产生新增可复用修复经验时，不要直接修改或提交 $HOME/.os-fix-skill；应生成 $HOME/.os-fix-skill-patches/ 下的本地 patch，保持 skill 仓库可继续 git pull --ff-only。拥有仓库写权限的开发者按当前开发环境的全局提示词或项目规则维护仓库。
 ```
 
 配置完成后，KylinOS Desktop V11 桌面系统修复问题可从 `$HOME/.os-fix-skill/SKILL.md` 进入，再按其中的 `references/` 路由继续查阅。功能增强、本地客制化和默认行为调整由 `$HOME/.os-enhance-skill` 维护。
+
+普通使用者的本地新增经验建议保存到 `$HOME/.os-fix-skill-patches/`，而不是直接提交到 `$HOME/.os-fix-skill`。这样 skill 仓库可以持续 `git pull --ff-only` 拉取上游更新；开发者维护仓库时再把 patch 内容整理进 `references/` 或 `knowledge/` 并按本机全局规则维护仓库。
 
 系统维护使用固定会话名，例如 `os-fix`。之后遇到系统问题时，恢复同一个会话继续处理：
 
