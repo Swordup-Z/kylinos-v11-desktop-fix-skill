@@ -73,14 +73,9 @@ If your system policy does not allow `curl | sh` or `curl | bash`, open the offi
 
 ## Install This Knowledge Base
 
-```bash
-cd "$HOME"
-git clone https://github.com/Swordup-Z/kylinos-v11-desktop-fix-skill.git "$HOME/.os-fix-skill"
-```
-
 ### Install by Pasting a Prompt into an AI Tool
 
-You can also paste the following prompt into Codex, Claude Code, or opencode and let the AI tool install and connect this knowledge base for you:
+Paste the following prompt into Codex, Claude Code, or opencode and let the AI tool install and connect this knowledge base for you:
 
 ```text
 Please install the KylinOS Desktop V11 repair knowledge base kylinos-v11-desktop-fix-skill on this machine and connect it to the current AI tool's user-level rule file.
@@ -110,13 +105,27 @@ When the user is working on KylinOS Desktop V11, UKUI, KARE, Kaiming, Clash Verg
 When finished, tell me the repository path, the rule file path you updated, and whether any update was skipped because of local changes or branch state.
 ```
 
+### Manual Install
+
+Clone or update this knowledge base first. Do not overwrite local changes in an existing directory. If `git pull --ff-only` fails, resolve the branch state before continuing.
+
+```bash
+if [ ! -d "$HOME/.os-fix-skill/.git" ]; then
+  git clone https://github.com/Swordup-Z/kylinos-v11-desktop-fix-skill.git "$HOME/.os-fix-skill"
+else
+  git -C "$HOME/.os-fix-skill" status -sb
+  git -C "$HOME/.os-fix-skill" fetch --prune
+  git -C "$HOME/.os-fix-skill" pull --ff-only
+fi
+```
+
 Entry file:
 
 ```text
 $HOME/.os-fix-skill/SKILL.md
 ```
 
-Common user-level rule files:
+Choose the user-level rule file for the current AI tool. Create its parent directory first if needed:
 
 ```text
 Codex:       $HOME/.codex/AGENTS.md
@@ -124,7 +133,24 @@ Claude Code: $HOME/.claude/CLAUDE.md
 opencode:    $HOME/.config/opencode/AGENTS.md
 ```
 
-After these rule files are connected to this knowledge base, KylinOS Desktop V11 repair issues can start from `$HOME/.os-fix-skill/SKILL.md` and then follow `references/`. Feature enhancement, local customization, and default-behavior changes are maintained in `$HOME/.os-enhance-skill`.
+For Codex, for example:
+
+```bash
+mkdir -p "$HOME/.codex"
+${EDITOR:-vi} "$HOME/.codex/AGENTS.md"
+```
+
+Append the following rules to the end of the selected rule file. Do not overwrite existing content, and do not append duplicates if equivalent rules already exist.
+
+```text
+When the user is working on KylinOS Desktop V11, UKUI, KARE, Kaiming, Clash Verge, system services, autostart, TUN, maintenance mode, the PanShi architecture, system protection, partitions, mounts, overlay, desktop AI subsystem, or related desktop operating-system issues, and the symptom is an existing capability that is broken, failing, noisy, not persistent, failing to install, or caused by damaged system services, use $HOME/.os-fix-skill/SKILL.md as the default knowledge entry.
+
+Before handling a system repair issue, read $HOME/.os-fix-skill/SKILL.md, then follow its reference routing and selectively read references/<scenario>.md. Then read only the referenced knowledge/<scenario>/README.md and one concrete knowledge chapter that matches the current symptom. If no concrete reference or knowledge chapter matches, do not traverse the whole skill. Only read $HOME/.os-fix-skill/references/system.md when the issue is clearly about maintenance mode, system protection, systemd/D-Bus base services, or system health-check noise.
+
+Follow "diagnose first, modify second, verify last". Before any system-level repair involving /usr, /etc, /opt, system packages, system services, device nodes, partitions, KSaf policies, or similar system paths, run mm-cli -s to check maintenance mode; only modify system paths, system services, or system packages after confirming the machine is in maintain mode.
+```
+
+After configuration, KylinOS Desktop V11 repair issues can start from `$HOME/.os-fix-skill/SKILL.md` and then follow `references/`. Feature enhancement, local customization, and default-behavior changes are maintained in `$HOME/.os-enhance-skill`.
 
 Use a fixed session name for system maintenance, such as `os-fix`:
 
