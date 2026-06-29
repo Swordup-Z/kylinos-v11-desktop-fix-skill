@@ -105,7 +105,7 @@ Rule file locations:
 - opencode: $HOME/.config/opencode/AGENTS.md
 
 Rules to append:
-When the user is working on KylinOS Desktop V11, UKUI, KARE, Kaiming, Clash Verge, system services, autostart, TUN, maintenance mode, the PanShi architecture, system protection, partitions, mounts, overlay, desktop AI subsystem, or related desktop operating-system issues, and the symptom is an existing capability that is broken, failing, noisy, not persistent, failing to install, or caused by damaged system services, use $HOME/.os-fix-skill/SKILL.md as the default knowledge entry. Before handling a system repair issue, read $HOME/.os-fix-skill/SKILL.md, then follow its reference routing and selectively read references/<scenario>.md. If no specialized reference matches, at least read $HOME/.os-fix-skill/references/system.md. Follow "diagnose first, modify second, verify last". Before any system-level repair involving /usr, /etc, /opt, system packages, system services, device nodes, partitions, KSaf policies, or similar system paths, run mm-cli -s to check maintenance mode; only modify system paths, system services, or system packages after confirming the machine is in maintain mode.
+When the user is working on KylinOS Desktop V11, UKUI, KARE, Kaiming, Clash Verge, system services, autostart, TUN, maintenance mode, the PanShi architecture, system protection, partitions, mounts, overlay, desktop AI subsystem, or related desktop operating-system issues, and the symptom is an existing capability that is broken, failing, noisy, not persistent, failing to install, or caused by damaged system services, use $HOME/.os-fix-skill/SKILL.md as the default knowledge entry. Before handling a system repair issue, read $HOME/.os-fix-skill/SKILL.md, then follow its reference routing and selectively read references/<scenario>.md. Then read only the referenced knowledge/<scenario>/README.md and one concrete knowledge chapter that matches the current symptom. If no concrete reference or knowledge chapter matches, do not traverse the whole skill. Only read $HOME/.os-fix-skill/references/system.md when the issue is clearly about maintenance mode, system protection, systemd/D-Bus base services, or system health-check noise. Follow "diagnose first, modify second, verify last". Before any system-level repair involving /usr, /etc, /opt, system packages, system services, device nodes, partitions, KSaf policies, or similar system paths, run mm-cli -s to check maintenance mode; only modify system paths, system services, or system packages after confirming the machine is in maintain mode.
 
 When finished, tell me the repository path, the rule file path you updated, and whether any update was skipped because of local changes or branch state.
 ```
@@ -201,7 +201,7 @@ Clash Verge TUN failure:
 SKILL.md
 -> references/network.md
 -> knowledge/network/README.md
--> knowledge/network/proxy-tun.md
+-> knowledge/network/tun-device.md or knowledge/network/clash-verge-service.md
 ```
 
 UKUI global search showing uninstalled Software Center apps:

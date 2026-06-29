@@ -20,8 +20,9 @@
 1. 先确认任务属于系统修复，而不是功能增强。
 2. 再判断场景：system、applications、ukui、network、hardware、storage、agent-tools 或 source-rebuild。
 3. 只读取一个最小匹配 reference。
-4. reference 只指向该场景的 knowledge 索引，不直接展开所有细分知识。
+4. reference 可以列出子场景和对应 knowledge 路径，但不直接展开具体修复内容。
 5. 进入 `knowledge/<scenario>/README.md` 后，只读取与用户问题匹配的具体章节；不要一次性读取整个场景目录。
+6. 如果 reference 和 knowledge 索引都没有命中具体章节，停止继续加载本 skill。基于当前系统诊断和通用能力处理，或先询问用户补充现象；不要遍历其他 reference 或整个 knowledge。
 
 ## 层级链路
 
@@ -30,8 +31,8 @@
 ```text
 需求类型
 -> 实际场景 reference
--> 特定分类/具体实例索引
--> 细分领域 knowledge
+-> 场景 knowledge 索引
+-> 细分 knowledge 章节
 ```
 
 对应文件路径：
@@ -47,4 +48,4 @@ SKILL.md
 
 ## Fallback
 
-未命中细分场景时，读取 [system.md](system.md)。
+只有问题明确属于维护模式、系统保护、systemd/D-Bus 基础服务或系统体检噪声时，才读取 [system.md](system.md)。如果只是“不知道该读哪个场景”，不要把 [system.md](system.md) 当成默认全文 fallback。

@@ -1,6 +1,6 @@
 # 系统问题修复：应用与隔离
 
-AI 工具读取本文件后，只继续读取与用户问题匹配的一个具体章节。
+AI 工具读取本文件后，只继续读取与用户问题匹配的一个具体章节；没有命中时停止，不要继续遍历应用目录。
 
 - [host-package-install.md](host-package-install.md)：宿主机命令行安装 `.deb` 或系统包，避免误装进 KARE。
 - [appimage.md](appimage.md)：AppImage 用户级安装、架构检查和 `libfuse.so.2` 缺失。

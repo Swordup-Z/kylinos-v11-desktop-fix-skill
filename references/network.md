@@ -8,9 +8,16 @@
 
 ## 知识入口
 
-进入网络与代理索引后，按代理、TUN、`/dev/net/tun`、网络发现弹窗或代理核心路径继续读取具体知识。
+进入网络与代理索引后，先从下面子场景中选择一个；没有命中时停止继续加载网络 knowledge。
 
 - [`../knowledge/network/README.md`](../knowledge/network/README.md)
+
+| 子场景 | 快速判断 | 对应 knowledge |
+| --- | --- | --- |
+| TUN 设备节点 | `/dev/net/tun` 缺失、TUN 字符设备异常，尚未指向 Clash Verge 服务 | `knowledge/network/tun-device.md` |
+| Clash Verge 服务与启用 | `clash-verge-service` 安装失败、服务 inactive、IPC socket 缺失、界面 TUN 未启用 | `knowledge/network/clash-verge-service.md` |
+| KARE 迁移残留 | 原 KARE 版迁移到宿主机 `.deb` 后仍有 KARE ExecStart、desktop 入口或 core 路径残留 | `knowledge/network/clash-verge-kare-migration.md` |
+| TUN 网络发现弹窗 | TUN 接口被 NetworkManager/kylin-nm 当成新网络，弹出是否允许发现本机 | `knowledge/network/tun-network-discovery.md` |
 
 ## 最小诊断
 
